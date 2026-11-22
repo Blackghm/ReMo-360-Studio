@@ -643,10 +643,85 @@
         transition: none !important;
       }
     }
+ /* Einbettungsmodus für die ReMo-360-Startseite */
+
+body.embedded {
+  margin: 0;
+  background: #f7f6f1;
+}
+
+body.embedded .header,
+body.embedded .intro,
+body.embedded .disclaimer {
+  display: none;
+}
+
+body.embedded .experience {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+
+body.embedded .viewer {
+  height: 610px;
+  min-height: 0;
+  max-height: none;
+  border-radius: 0;
+}
+
+body.embedded .selection {
+  margin: 0;
+  padding: 14px;
+  gap: 10px;
+  background: #f7f6f1;
+}
+
+body.embedded .property {
+  padding: 14px;
+}
+
+body.embedded .viewer:fullscreen {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+}
+
+@media (max-width: 760px) {
+  body.embedded .viewer {
+    height: 510px;
+    min-height: 0;
+    max-height: none;
+  }
+
+  body.embedded .selection {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  body.embedded .property {
+    padding: 10px 14px;
+  }
+
+  body.embedded .property-symbol {
+    width: 32px;
+    height: 32px;
+  }
+}
   </style>
 </head>
 
 <body>
+  <script>
+  const embedded =
+    new URLSearchParams(window.location.search).get("embed") === "1";
+
+  if (embedded) {
+    document.body.classList.add("embedded");
+  }
+</script>
   <header class="header">
     <a class="brand" href="index.html">
       ReMo <span>360<sup>°</sup></span>
