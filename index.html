@@ -1291,6 +1291,25 @@
         animation: none !important;
       }
     }
+ /* Eingebettete ReMo-360-Beispieldemo */
+
+#tour-container {
+  overflow: hidden;
+}
+
+#tour-container .remo-demo-frame {
+  display: block;
+  width: 100%;
+  height: 760px;
+  border: 0;
+  background: #f7f6f1;
+}
+
+@media (max-width: 760px) {
+  #tour-container .remo-demo-frame {
+    height: 800px;
+  }
+}
   </style>
 </head>
 
@@ -1544,36 +1563,36 @@
           <h2>Hier werden Räume<br>virtuell erlebbar.</h2>
         </div>
 
-        <p>
-          Dieser Bereich ist für unsere ersten Beispielrundgänge
-          vorbereitet. Sobald sie verfügbar sind, können Sie
-          hier selbst auf Entdeckungstour gehen.
-        </p>
+      <p>
+  Entdecken Sie drei illustrative Raumkonzepte für ein
+  Restaurant, eine Ferienwohnung und ein Studio.
+  Sehen Sie sich um, wechseln Sie die Perspektive
+  und öffnen Sie die markierten Informationspunkte.
+</p>
       </div>
 
       <!--
         Hier später einen echten, freigegebenen Rundgang einbinden.
         Aktuell wird kein externer Rundgang geladen.
       -->
-      <div class="tour-container" id="tour-container">
-        <div class="tour-placeholder">
-          <span class="placeholder-badge">
-            Beispielbereich · noch kein Rundgang hinterlegt
-          </span>
+   <!-- Interaktive Beispielräume direkt auf der Startseite -->
+<div class="tour-container" id="tour-container">
+  <iframe
+    class="remo-demo-frame"
+    src="demo.html?embed=1"
+    title="Interaktive ReMo-360-Konzeptdemo: Restaurant, Ferienwohnung und Studio"
+    loading="lazy"
+    allow="fullscreen"
+    allowfullscreen
+  ></iframe>
+</div>
 
-          <div class="tour-circle" aria-hidden="true">360°</div>
-
-          <h3>Ihr nächster Einblick.</h3>
-
-          <p>
-            Hier ist Platz für einen interaktiven Beispielrundgang.
-          </p>
-
-          <span class="small-note">
-            Geplant: umsehen · Räume wechseln · Details entdecken
-          </span>
-        </div>
-      </div>
+<p class="small-note">
+  Interaktive Konzeptdemo mit künstlich gestalteten 3D-Räumen.
+  Keine fotografischen Kundenaufnahmen.
+  Wählen Sie Restaurant, Ferienwohnung oder Studio
+  direkt unterhalb der Raumansicht aus.
+</p>
 
       <div class="references">
         <article class="reference">
