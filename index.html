@@ -1,1 +1,2111 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <title>ReMo 360 – Räume zeigen. Gäste einladen.</title>
+
+  <meta
+    name="description"
+    content="ReMo 360 erstellt virtuelle 360°-Rundgänge für Restaurants, Ferienunterkünfte und Unternehmen – für Ihre Website und Google Maps."
+  >
+
+  <meta name="theme-color" content="#f8f7f3">
+
+  <style>
+    /* GRUNDLAGEN */
+
+    :root {
+      --background: #f8f7f3;
+      --surface: #fffefa;
+      --green: #243b32;
+      --green-light: #eaf0e3;
+      --accent: #b8cc9c;
+      --text: #263b32;
+      --muted: #69756d;
+      --border: #dce2d7;
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 100px;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button,
+    a,
+    summary {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :focus-visible {
+      outline: 3px solid #809c63;
+      outline-offset: 5px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    h1,
+    h2 {
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.055em;
+    }
+
+    h1 {
+      font-size: clamp(3.4rem, 6.8vw, 6.3rem);
+      margin-bottom: 28px;
+    }
+
+    h2 {
+      font-size: clamp(2.4rem, 4.5vw, 4rem);
+      margin-bottom: 24px;
+    }
+
+    h3 {
+      font-size: 1.3rem;
+      font-weight: 500;
+      line-height: 1.35;
+      letter-spacing: -0.025em;
+    }
+
+    em {
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 400;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 64px));
+      margin-inline: auto;
+    }
+
+    .section {
+      padding-block: 100px;
+    }
+
+    .eyebrow {
+      margin-bottom: 24px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.75rem;
+      line-height: 1.8;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      padding: 15px 23px;
+      border: 1px solid transparent;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: transform 0.2s, background 0.2s;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-primary {
+      background: var(--green);
+      color: white;
+    }
+
+    .button-primary:hover {
+      background: #3c5748;
+    }
+
+    .button-outline {
+      border-color: #acb9a5;
+      background: transparent;
+    }
+
+    .button-outline:hover {
+      background: var(--green-light);
+    }
+
+    .text-link {
+      display: inline-block;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #aab69e;
+      font-size: 0.85rem;
+    }
+
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 20px;
+      z-index: 100;
+      padding: 12px;
+      background: var(--green);
+      color: white;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    /* VORSCHAUHINWEIS – VOR DEM START ENTFERNEN */
+
+    .preview-banner {
+      padding: 8px 20px;
+      background: #e9eddf;
+      text-align: center;
+      color: #4d5d40;
+      font-size: 0.72rem;
+    }
+
+    /* NAVIGATION */
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      background: rgba(248, 247, 243, 0.97);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .navigation {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+      height: 84px;
+    }
+
+    .logo {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 8px;
+      font-size: 1.8rem;
+      font-weight: 650;
+      letter-spacing: -0.08em;
+      white-space: nowrap;
+    }
+
+    .logo-number {
+      font-weight: 400;
+      letter-spacing: -0.06em;
+    }
+
+    .logo-degree {
+      color: #8da372;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 0.83rem;
+    }
+
+    .nav-links > a:hover {
+      color: #7a915d;
+    }
+
+    .nav-contact {
+      padding: 10px 17px;
+      border: 1px solid var(--green);
+      border-radius: 4px;
+    }
+
+    .menu-toggle {
+      display: none;
+      width: 44px;
+      height: 44px;
+      padding: 11px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+    }
+
+    .menu-toggle span {
+      display: block;
+      height: 1px;
+      margin: 6px 0;
+      background: var(--green);
+    }
+
+    /* STARTBEREICH */
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+      gap: 65px;
+      padding-block: 85px;
+    }
+
+    .hero-description {
+      max-width: 520px;
+      color: var(--muted);
+      font-size: 1.07rem;
+      line-height: 1.85;
+    }
+
+    .hero-buttons {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 26px;
+      margin-top: 32px;
+    }
+
+    .hero-benefits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 19px;
+      margin-top: 36px;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .hero-benefits span::before {
+      content: "✓";
+      margin-right: 6px;
+      color: #78905f;
+    }
+
+    /* ABSTRAKTE RAUMILLUSTRATION, KEIN KUNDENFOTO */
+
+    .hero-visual {
+      position: relative;
+      height: 530px;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: 155px 155px 8px 8px;
+      background: linear-gradient(120deg, #e0e0d1, #f1ecde);
+    }
+
+    .visual-label {
+      position: absolute;
+      top: 40px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+    }
+
+    .window {
+      position: absolute;
+      top: 100px;
+      left: 70px;
+      width: 190px;
+      height: 280px;
+      border: 15px solid #d5d5c3;
+      border-bottom: none;
+      border-radius: 130px 130px 0 0;
+      background: linear-gradient(140deg, #8c9d7f, #d3d9bc);
+      box-shadow: 0 0 0 1px #bcc2aa;
+    }
+
+    .window::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: #d5d5c3;
+    }
+
+    .wall-arch {
+      position: absolute;
+      top: 65px;
+      right: -65px;
+      width: 170px;
+      height: 330px;
+      border: 14px solid #ddd9c9;
+      border-radius: 120px 120px 0 0;
+      background: #c6c9b2;
+    }
+
+    .floor {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 180px;
+      background: linear-gradient(155deg, #b9ae96, #e6dcc6);
+      clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%);
+    }
+
+    .table {
+      position: absolute;
+      top: 330px;
+      left: 70px;
+      width: 235px;
+      height: 65px;
+      border-radius: 50%;
+      background: #a57e58;
+      box-shadow: 0 9px 0 #8c6848;
+    }
+
+    .table::after {
+      content: "";
+      position: absolute;
+      top: 60px;
+      left: 110px;
+      width: 17px;
+      height: 90px;
+      background: #816346;
+      z-index: -1;
+    }
+
+    .chair {
+      position: absolute;
+      top: 310px;
+      right: 60px;
+      width: 74px;
+      height: 110px;
+      transform: rotate(-9deg);
+      border-radius: 45px 45px 12px 12px;
+      background: #768467;
+      box-shadow: 7px 13px 0 -3px #59694f;
+    }
+
+    .tour-orbit {
+      position: absolute;
+      top: 190px;
+      left: 50%;
+      display: grid;
+      place-items: center;
+      width: 112px;
+      height: 112px;
+      transform: translateX(-50%);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 0 15px rgba(255, 255, 255, 0.12);
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 300;
+    }
+
+    .visual-card {
+      position: absolute;
+      right: 24px;
+      bottom: 43px;
+      left: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 20px;
+      border-radius: 5px;
+      background: rgba(255, 254, 246, 0.93);
+      font-size: 0.82rem;
+    }
+
+    .visual-card p {
+      margin: 0;
+    }
+
+    .visual-arrow {
+      display: grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      border: 1px solid #b5c0a7;
+      border-radius: 50%;
+      font-size: 1.3rem;
+    }
+
+    .illustration-note {
+      position: absolute;
+      right: 10px;
+      bottom: 12px;
+      left: 10px;
+      text-align: center;
+      color: #546049;
+      font-size: 0.58rem;
+    }
+
+    /* ZWEI VERÖFFENTLICHUNGSWEGE */
+
+    .platform-strip {
+      border-block: 1px solid var(--border);
+    }
+
+    .platform-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+      padding-block: 27px;
+    }
+
+    .platform-inner p {
+      margin: 0;
+      font-size: 0.85rem;
+    }
+
+    .platform-inner > span {
+      font-size: 1.35rem;
+      letter-spacing: -0.03em;
+    }
+
+    .platform-inner .plus {
+      color: #8ba16f;
+      font-size: 1.8rem;
+    }
+
+    /* ABSCHNITTE UND KARTEN */
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      align-items: end;
+      gap: 85px;
+      margin-bottom: 44px;
+    }
+
+    .section-heading h2 {
+      margin-bottom: 0;
+    }
+
+    .section-heading > p {
+      max-width: 430px;
+      margin-bottom: 4px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .service-card {
+      display: flex;
+      flex-direction: column;
+      padding: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+
+    .service-icon {
+      margin-bottom: 30px;
+      color: #7c9166;
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      font-size: 0.89rem;
+    }
+
+    .card-caption {
+      margin-top: auto;
+      padding-top: 22px;
+      border-top: 1px solid var(--border);
+      font-size: 0.71rem;
+    }
+
+    /* ZIELGRUPPEN */
+
+    .audience-section {
+      padding-block: 85px;
+      background: #eeeee5;
+    }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 95px;
+    }
+
+    .audience-intro {
+      max-width: 420px;
+      color: var(--muted);
+    }
+
+    .audience-item {
+      display: flex;
+      gap: 25px;
+      padding: 23px 0;
+      border-bottom: 1px solid #d3dbcc;
+    }
+
+    .audience-item:first-child {
+      padding-top: 0;
+    }
+
+    .audience-number {
+      padding-top: 4px;
+      color: #81916f;
+      font-size: 0.72rem;
+    }
+
+    .audience-item h3 {
+      margin-bottom: 8px;
+      font-size: 1.17rem;
+    }
+
+    .audience-item p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    /* RUNDGANG UND REFERENZEN */
+
+    .tour-container {
+      overflow: hidden;
+      min-height: 440px;
+      border: 1px solid #d5decc;
+      border-radius: var(--radius);
+      background: #e8ede1;
+    }
+
+    .tour-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 440px;
+      padding: 35px;
+      text-align: center;
+      background:
+        radial-gradient(
+          ellipse at center,
+          transparent 27%,
+          #cad5bf55 27.3%,
+          transparent 27.6%,
+          transparent 50%,
+          #cad5bf55 50.3%,
+          transparent 50.6%
+        );
+    }
+
+    .placeholder-badge {
+      display: inline-block;
+      padding: 6px 13px;
+      border: 1px solid #d6decc;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.65);
+      font-size: 0.66rem;
+    }
+
+    .tour-circle {
+      display: grid;
+      place-items: center;
+      width: 125px;
+      height: 125px;
+      margin-block: 28px;
+      border: 1px solid #aab99a;
+      border-radius: 50%;
+      font-family: Georgia, serif;
+      font-size: 2.9rem;
+      font-style: italic;
+    }
+
+    .tour-placeholder h3 {
+      margin-bottom: 10px;
+      font-size: 1.6rem;
+    }
+
+    .tour-placeholder p {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .tour-container iframe {
+      display: block;
+      width: 100%;
+      height: 550px;
+      border: 0;
+    }
+
+    .references {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .reference {
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .reference span {
+      color: var(--muted);
+      font-size: 0.67rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .reference h3 {
+      margin-block: 13px 8px;
+      font-size: 1.12rem;
+    }
+
+    .reference p {
+      color: var(--muted);
+      font-size: 0.77rem;
+    }
+
+    /* ABLAUF */
+
+    .process-section {
+      padding-block: 85px;
+      background: var(--green);
+      color: #f7f6ef;
+    }
+
+    .process-section .eyebrow {
+      color: #c2d7a7;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+      margin-top: 48px;
+    }
+
+    .step {
+      padding-top: 23px;
+      border-top: 1px solid #66796b;
+    }
+
+    .step > span {
+      color: #bfd3a4;
+      font-size: 0.76rem;
+    }
+
+    .step h3 {
+      margin-top: 26px;
+      font-size: 1.12rem;
+    }
+
+    .step p {
+      margin-bottom: 0;
+      color: #ced6cb;
+      font-size: 0.86rem;
+    }
+
+    /* LEISTUNGSPAKETE */
+
+    .packages {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 56px;
+    }
+
+    .package {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      padding: 32px 28px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .package.featured {
+      border-color: #8c9f78;
+      background: #eff3e8;
+    }
+
+    .package-tag {
+      position: absolute;
+      top: -14px;
+      right: 20px;
+      left: 20px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      background: var(--green);
+      color: white;
+      text-align: center;
+      font-size: 0.65rem;
+    }
+
+    .package-category {
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 0.67rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .package h3 {
+      margin-bottom: 18px;
+      font-family: Georgia, serif;
+      font-size: 2rem;
+      font-weight: 400;
+    }
+
+    .package-description {
+      min-height: 76px;
+      color: var(--muted);
+      font-size: 0.87rem;
+    }
+
+    .package ul {
+      margin: 0 0 25px;
+      padding: 20px 0 0;
+      border-top: 1px solid var(--border);
+      list-style: none;
+    }
+
+    .package li {
+      position: relative;
+      padding: 8px 0 8px 23px;
+      font-size: 0.82rem;
+    }
+
+    .package li::before {
+      content: "✓";
+      position: absolute;
+      left: 0;
+      color: #809567;
+    }
+
+    .package-price {
+      margin-top: auto;
+      padding-top: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    /* FAQ */
+
+    .faq-section {
+      padding-block: 85px;
+      background: #eeeee5;
+    }
+
+    .faq-layout {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 80px;
+    }
+
+    details {
+      border-bottom: 1px solid #d1dac7;
+    }
+
+    details:first-child {
+      border-top: 1px solid #d1dac7;
+    }
+
+    summary {
+      position: relative;
+      padding: 22px 35px 22px 0;
+      cursor: pointer;
+      list-style: none;
+      font-size: 0.93rem;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      position: absolute;
+      top: 17px;
+      right: 5px;
+      font-size: 1.35rem;
+    }
+
+    details[open] summary::after {
+      content: "−";
+    }
+
+    details p {
+      padding-right: 25px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    /* KONTAKT */
+
+    .contact-layout {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      align-items: center;
+      gap: 85px;
+    }
+
+    .contact-description {
+      max-width: 440px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .contact-card {
+      padding: 38px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+    }
+
+    .contact-card h3 {
+      margin-top: 25px;
+      font-size: 1.55rem;
+    }
+
+    .contact-card > p {
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .contact-details {
+      margin-block: 28px;
+    }
+
+    .contact-details > div {
+      padding-block: 13px;
+      border-top: 1px solid var(--border);
+    }
+
+    .contact-details dt {
+      color: var(--muted);
+      font-size: 0.67rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .contact-details dd {
+      margin: 5px 0 0;
+      overflow-wrap: anywhere;
+      font-size: 0.9rem;
+    }
+
+    /* FOOTER UND RECHTSTEXT-DIALOGE */
+
+    .footer {
+      padding-top: 32px;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-top,
+    .footer-bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 25px;
+    }
+
+    .footer-top p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .legal-button {
+      padding: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 0.77rem;
+    }
+
+    .legal-button:hover {
+      text-decoration: underline;
+    }
+
+    .footer-bottom {
+      margin-top: 25px;
+      padding-block: 21px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.68rem;
+    }
+
+    dialog {
+      width: min(650px, calc(100% - 36px));
+      max-height: 85vh;
+      padding: 32px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    dialog::backdrop {
+      background: rgba(22, 42, 33, 0.6);
+      backdrop-filter: blur(4px);
+    }
+
+    .dialog-heading {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .dialog-heading h2 {
+      font-size: 2rem;
+    }
+
+    .dialog-close {
+      padding: 0 8px;
+      border: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 2rem;
+      line-height: 1;
+    }
+
+    dialog p,
+    dialog li {
+      font-size: 0.9rem;
+    }
+
+    .legal-warning {
+      padding: 13px;
+      border-radius: 4px;
+      background: #f0e9d8;
+    }
+
+    /* TABLETS */
+
+    @media (max-width: 1050px) {
+      .container {
+        width: calc(100% - 44px);
+      }
+
+      .nav-links {
+        gap: 17px;
+      }
+
+      .hero {
+        gap: 32px;
+      }
+
+      .hero-visual {
+        height: 500px;
+      }
+
+      .section-heading,
+      .two-column,
+      .contact-layout,
+      .faq-layout {
+        gap: 42px;
+      }
+
+      .service-card,
+      .package {
+        padding: 27px 23px;
+      }
+    }
+
+    /* SMARTPHONES */
+
+    @media (max-width: 760px) {
+      html {
+        scroll-padding-top: 85px;
+      }
+
+      .container {
+        width: calc(100% - 36px);
+      }
+
+      .section {
+        padding-block: 64px;
+      }
+
+      .preview-banner {
+        font-size: 0.62rem;
+      }
+
+      .navigation {
+        height: 72px;
+      }
+
+      .logo {
+        font-size: 1.6rem;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        position: absolute;
+        top: 72px;
+        right: 0;
+        left: 0;
+        display: none;
+        align-items: stretch;
+        flex-direction: column;
+        gap: 5px;
+        padding: 20px 24px;
+        border-bottom: 1px solid var(--border);
+        background: var(--background);
+      }
+
+      .nav-links.open {
+        display: flex;
+      }
+
+      .nav-links a {
+        padding: 10px 0;
+      }
+
+      .nav-links .nav-contact {
+        margin-top: 6px;
+        padding: 11px 15px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding-block: 46px;
+      }
+
+      h1 {
+        font-size: clamp(3.25rem, 11.5vw, 5rem);
+      }
+
+      .hero-description {
+        font-size: 1rem;
+      }
+
+      .hero-visual {
+        justify-self: center;
+        width: 100%;
+        max-width: 510px;
+        height: 460px;
+        border-radius: 125px 125px 8px 8px;
+      }
+
+      .window {
+        left: 45px;
+      }
+
+      .table {
+        left: 45px;
+        width: 215px;
+      }
+
+      .chair {
+        right: 38px;
+      }
+
+      .hero-benefits {
+        gap: 9px 14px;
+        font-size: 0.65rem;
+      }
+
+      .platform-inner {
+        flex-wrap: wrap;
+        justify-content: flex-start;
+        gap: 10px 20px;
+      }
+
+      .platform-inner p {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+
+      .platform-inner > span {
+        font-size: 1.08rem;
+      }
+
+      .section-heading,
+      .two-column,
+      .faq-layout,
+      .contact-layout {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .section-heading > p {
+        max-width: none;
+      }
+
+      .cards,
+      .packages,
+      .references {
+        grid-template-columns: 1fr;
+      }
+
+      .service-card {
+        padding: 29px;
+      }
+
+      .audience-section,
+      .process-section,
+      .faq-section {
+        padding-block: 62px;
+      }
+
+      .audience-list {
+        margin-top: 10px;
+      }
+
+      .tour-container,
+      .tour-placeholder {
+        min-height: 390px;
+      }
+
+      .tour-placeholder {
+        padding: 25px;
+      }
+
+      .placeholder-badge {
+        font-size: 0.61rem;
+      }
+
+      .tour-container iframe {
+        height: 430px;
+      }
+
+      .references {
+        gap: 12px;
+      }
+
+      .reference h3 {
+        margin-top: 8px;
+      }
+
+      .steps {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 30px 23px;
+        margin-top: 35px;
+      }
+
+      .step h3 {
+        margin-top: 18px;
+      }
+
+      .packages {
+        gap: 32px;
+        margin-top: 43px;
+      }
+
+      .package {
+        padding: 30px;
+      }
+
+      .package-description {
+        min-height: 0;
+      }
+
+      .contact-card {
+        padding: 28px;
+      }
+
+      .footer-top {
+        flex-wrap: wrap;
+        align-items: flex-start;
+        gap: 18px;
+      }
+
+      .footer-top p {
+        order: 3;
+        width: 100%;
+      }
+
+      .footer-top > div {
+        margin-left: auto;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 7px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-buttons {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+
+  <!-- Erst nach Ergänzung aller Angaben entfernen. -->
+  <div class="preview-banner">
+    Website-Entwurf · Kontakt, Referenzen und Rechtstexte folgen.
+  </div>
+
+  <header class="header">
+    <div class="container navigation">
+      <a class="logo" href="#start" aria-label="ReMo 360 – Startseite">
+        ReMo
+        <span class="logo-number">
+          360<span class="logo-degree">°</span>
+        </span>
+      </a>
+
+      <button
+        class="menu-toggle"
+        id="menu-toggle"
+        type="button"
+        aria-label="Navigation öffnen"
+        aria-expanded="false"
+        aria-controls="navigation"
+      >
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="nav-links" id="navigation" aria-label="Hauptnavigation">
+        <a href="#leistungen">Leistungen</a>
+        <a href="#rundgaenge">Rundgänge</a>
+        <a href="#ablauf">Ablauf</a>
+        <a href="#pakete">Pakete</a>
+        <a class="nav-contact" href="#kontakt">Projekt anfragen ↗</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="inhalt">
+
+    <!-- STARTBEREICH -->
+
+    <section class="container hero" id="start">
+      <div>
+        <p class="eyebrow">Virtuelle Einblicke. Echte Räume.</p>
+
+        <h1>
+          Räume zeigen.<br>
+          Gäste <em>einladen.</em>
+        </h1>
+
+        <p class="hero-description">
+          Machen Sie Ihr Restaurant, Ihre Ferienunterkunft oder Ihr
+          Unternehmen virtuell erlebbar – mit einem 360°-Rundgang
+          für Ihre Website und Google Maps.
+        </p>
+
+        <div class="hero-buttons">
+          <a class="button button-primary" href="#kontakt">
+            Ihr Projekt besprechen <span aria-hidden="true">↗</span>
+          </a>
+
+          <a class="text-link" href="#leistungen">
+            Leistungen entdecken ↓
+          </a>
+        </div>
+
+        <div class="hero-benefits">
+          <span>Aufnahme vor Ort</span>
+          <span>Individuelle Umsetzung</span>
+          <span>Website & Google Maps</span>
+        </div>
+      </div>
+
+      <div
+        class="hero-visual"
+        role="img"
+        aria-label="Abstrakte Raumillustration mit Tisch, Stuhl und Fenster. Kein echtes Kundenprojekt."
+      >
+        <div class="visual-label">RAUM FÜR NEUE PERSPEKTIVEN</div>
+        <div class="window"></div>
+        <div class="wall-arch"></div>
+        <div class="floor"></div>
+        <div class="table"></div>
+        <div class="chair"></div>
+
+        <div class="tour-orbit">360°</div>
+
+        <div class="visual-card">
+          <p>
+            Ein erster Eindruck.<br>
+            Schon vor dem Besuch.
+          </p>
+          <span class="visual-arrow" aria-hidden="true">↗</span>
+        </div>
+
+        <span class="illustration-note">
+          Konzeptillustration · kein Beispielrundgang
+        </span>
+      </div>
+    </section>
+
+    <div class="platform-strip">
+      <div class="container platform-inner">
+        <p>Ein Rundgang.<br>Zwei Wege zu Ihren Räumen.</p>
+        <span>Auf Ihrer Website</span>
+        <span class="plus" aria-hidden="true">+</span>
+        <span>Auf Google Maps</span>
+      </div>
+    </div>
+
+    <!-- LEISTUNGEN -->
+
+    <section class="container section" id="leistungen">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">01 / Leistungen</p>
+          <h2>Ihr Raum.<br>Aus jeder Perspektive.</h2>
+        </div>
+
+        <p>
+          Vom ersten Gespräch bis zum fertigen Rundgang:
+          Wir kümmern uns um die Umsetzung und stimmen den
+          Umfang auf Ihre Räumlichkeiten ab.
+        </p>
+      </div>
+
+      <div class="cards">
+        <article class="service-card">
+          <span class="service-icon" aria-hidden="true">◎</span>
+          <h3>360°-Aufnahmen</h3>
+          <p>
+            Wir fotografieren Ihre Räumlichkeiten vor Ort und
+            verbinden die einzelnen Panoramen zu einem
+            interaktiven Rundgang.
+          </p>
+          <span class="card-caption">
+            Die Grundlage Ihres Rundgangs
+          </span>
+        </article>
+
+        <article class="service-card">
+          <span class="service-icon" aria-hidden="true">▱</span>
+          <h3>Auf Ihrer Website</h3>
+          <p>
+            Ihr Rundgang wird für die Einbindung in Ihre Website
+            vorbereitet. Die Umsetzung stimmen wir mit Ihnen
+            oder Ihrer Webagentur ab.
+          </p>
+          <span class="card-caption">Ihr digitaler Empfang</span>
+        </article>
+
+        <article class="service-card">
+          <span class="service-icon" aria-hidden="true">⌖</span>
+          <h3>Auf Google Maps</h3>
+          <p>
+            Die Veröffentlichung Ihrer 360°-Innenansichten auf
+            Google Maps gehört zum Angebot. Voraussetzungen
+            und Zuordnung zu Ihrem Standort klären wir vorab.
+          </p>
+          <span class="card-caption">
+            Auch dort Räume entdecken
+          </span>
+        </article>
+      </div>
+
+      <p class="small-note">
+        Gestaltung und Funktionen können sich zwischen dem
+        Website-Rundgang und der Darstellung auf Google Maps
+        unterscheiden. Plattformabhängige Voraussetzungen und
+        Freigaben werden vor Projektbeginn geprüft.
+      </p>
+    </section>
+
+    <!-- ZIELGRUPPEN -->
+
+    <section class="audience-section">
+      <div class="container two-column">
+        <div>
+          <p class="eyebrow">Für Orte, die man erleben möchte</p>
+          <h2>Der Besuch beginnt<br>mit einem Einblick.</h2>
+
+          <p class="audience-intro">
+            Ob Gastraum, Gästezimmer oder Studio:
+            Wir richten den Rundgang auf die Räume aus,
+            die Sie zeigen möchten.
+          </p>
+
+          <a class="text-link" href="#kontakt">
+            Über Ihre Räume sprechen ↗
+          </a>
+        </div>
+
+        <div class="audience-list">
+          <article class="audience-item">
+            <span class="audience-number">01</span>
+            <div>
+              <h3>Restaurants & Cafés</h3>
+              <p>
+                Gastraum, Terrasse und besondere Plätze
+                virtuell vorstellen.
+              </p>
+            </div>
+          </article>
+
+          <article class="audience-item">
+            <span class="audience-number">02</span>
+            <div>
+              <h3>Ferienwohnungen & Unterkünfte</h3>
+              <p>
+                Zimmer, Raumaufteilung und Ausstattung
+                im Zusammenhang zeigen.
+              </p>
+            </div>
+          </article>
+
+          <article class="audience-item">
+            <span class="audience-number">03</span>
+            <div>
+              <h3>Hotels & Veranstaltungsorte</h3>
+              <p>
+                Von der Lobby bis zur Eventfläche einen
+                räumlichen Eindruck vermitteln.
+              </p>
+            </div>
+          </article>
+
+          <article class="audience-item">
+            <span class="audience-number">04</span>
+            <div>
+              <h3>Studios & weitere Unternehmen</h3>
+              <p>
+                Räume präsentieren, die Teil Ihres Angebots sind.
+              </p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- BEISPIELRUNDGÄNGE -->
+
+    <section class="container section" id="rundgaenge">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">02 / Einblicke</p>
+          <h2>Hier werden Räume<br>virtuell erlebbar.</h2>
+        </div>
+
+        <p>
+          Dieser Bereich ist für unsere ersten Beispielrundgänge
+          vorbereitet. Sobald sie verfügbar sind, können Sie
+          hier selbst auf Entdeckungstour gehen.
+        </p>
+      </div>
+
+      <!--
+        Hier später einen echten, freigegebenen Rundgang einbinden.
+        Aktuell wird kein externer Rundgang geladen.
+      -->
+      <div class="tour-container" id="tour-container">
+        <div class="tour-placeholder">
+          <span class="placeholder-badge">
+            Beispielbereich · noch kein Rundgang hinterlegt
+          </span>
+
+          <div class="tour-circle" aria-hidden="true">360°</div>
+
+          <h3>Ihr nächster Einblick.</h3>
+
+          <p>
+            Hier ist Platz für einen interaktiven Beispielrundgang.
+          </p>
+
+          <span class="small-note">
+            Geplant: umsehen · Räume wechseln · Details entdecken
+          </span>
+        </div>
+      </div>
+
+      <div class="references">
+        <article class="reference">
+          <span>01 / Gastronomie</span>
+          <h3>Raum für Atmosphäre.</h3>
+          <p>Referenzplatzhalter – noch kein Kundenprojekt.</p>
+        </article>
+
+        <article class="reference">
+          <span>02 / Unterkünfte</span>
+          <h3>Einblick ins Ankommen.</h3>
+          <p>Referenzplatzhalter – noch kein Kundenprojekt.</p>
+        </article>
+
+        <article class="reference">
+          <span>03 / Weitere Räume</span>
+          <h3>Neue Perspektiven.</h3>
+          <p>Referenzplatzhalter – noch kein Kundenprojekt.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- ABLAUF -->
+
+    <section class="process-section" id="ablauf">
+      <div class="container">
+        <p class="eyebrow">03 / Der Ablauf</p>
+
+        <h2>
+          Von Ihrer Idee<br>
+          zum virtuellen Rundgang.
+        </h2>
+
+        <div class="steps">
+          <article class="step">
+            <span>01</span>
+            <h3>Kennenlernen</h3>
+            <p>
+              Wir besprechen Ihre Räume, Ihre Wünsche und
+              die geplante Verwendung. Sie erhalten ein
+              individuelles Angebot.
+            </p>
+          </article>
+
+          <article class="step">
+            <span>02</span>
+            <h3>Vorbereiten & aufnehmen</h3>
+            <p>
+              Wir stimmen den Termin und die Vorbereitung ab.
+              Anschließend entstehen die 360°-Aufnahmen
+              bei Ihnen vor Ort.
+            </p>
+          </article>
+
+          <article class="step">
+            <span>03</span>
+            <h3>Bearbeiten & abstimmen</h3>
+            <p>
+              Wir bearbeiten die Panoramen, erstellen den
+              Rundgang und stimmen die vereinbarten Inhalte
+              mit Ihnen ab.
+            </p>
+          </article>
+
+          <article class="step">
+            <span>04</span>
+            <h3>Bereitstellen</h3>
+            <p>
+              Nach Ihrer Freigabe bereiten wir die
+              Website-Einbindung und die vereinbarte
+              Veröffentlichung auf Google Maps vor.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- LEISTUNGSPAKETE -->
+
+    <section class="container section" id="pakete">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">04 / Leistungspakete</p>
+          <h2>
+            Passend zu Ihren Räumen.<br>
+            Nicht von der Stange.
+          </h2>
+        </div>
+
+        <p>
+          Die folgenden Pakete geben einen ersten Überblick.
+          Den konkreten Umfang und das Angebot stimmen
+          wir persönlich mit Ihnen ab.
+        </p>
+      </div>
+
+      <div class="packages">
+        <article class="package">
+          <p class="package-category">Kompakt</p>
+          <h3>Einblick</h3>
+
+          <p class="package-description">
+            Für kleinere Räumlichkeiten und einen
+            fokussierten virtuellen Eindruck.
+          </p>
+
+          <ul>
+            <li>Abstimmung & Aufnahme vor Ort</li>
+            <li>Bearbeitung der 360°-Panoramen</li>
+            <li>Verknüpfter virtueller Rundgang</li>
+            <li>Vorbereitung zur Website-Einbindung</li>
+            <li>
+              Google-Maps-Veröffentlichung nach Prüfung
+              der Voraussetzungen
+            </li>
+          </ul>
+
+          <p class="package-price">Individuelles Angebot</p>
+
+          <a class="button button-outline" href="#kontakt">
+            Einblick anfragen ↗
+          </a>
+        </article>
+
+        <article class="package featured">
+          <span class="package-tag">
+            Für einen individuellen Auftritt
+          </span>
+
+          <p class="package-category">Individuell</p>
+          <h3>Raumgefühl</h3>
+
+          <p class="package-description">
+            Für mehrere Bereiche und zusätzliche Informationen
+            im Website-Rundgang.
+          </p>
+
+          <ul>
+            <li>Alle Leistungen aus „Einblick“</li>
+            <li>Erweiterter Aufnahmeumfang</li>
+            <li>Logo & individuelle Startansicht</li>
+            <li>Infopunkte im Website-Rundgang</li>
+            <li>Links etwa zu Speisekarte oder Buchung</li>
+            <li>Abstimmungsrunde vor Veröffentlichung</li>
+          </ul>
+
+          <p class="package-price">Individuelles Angebot</p>
+
+          <a class="button button-primary" href="#kontakt">
+            Raumgefühl anfragen ↗
+          </a>
+        </article>
+
+        <article class="package">
+          <p class="package-category">Umfangreich</p>
+          <h3>Panorama</h3>
+
+          <p class="package-description">
+            Für größere Objekte, mehrere Etagen oder
+            ein individuelles Raumkonzept.
+          </p>
+
+          <ul>
+            <li>Alle Leistungen aus „Raumgefühl“</li>
+            <li>Individuelle Projektplanung</li>
+            <li>Mehrere Bereiche oder Etagen</li>
+            <li>Zusätzliche Inhalte nach Absprache</li>
+            <li>Optionale laufende Betreuung</li>
+            <li>Aktualisierungen separat vereinbar</li>
+          </ul>
+
+          <p class="package-price">Individuelles Angebot</p>
+
+          <a class="button button-outline" href="#kontakt">
+            Panorama anfragen ↗
+          </a>
+        </article>
+      </div>
+
+      <p class="small-note">
+        Der verbindliche Leistungsumfang, Nutzungsrechte,
+        Hosting, Laufzeit und mögliche Folgekosten werden
+        im jeweiligen Angebot festgelegt. Zusätzliche
+        Gestaltungselemente beziehen sich auf den
+        Website-Rundgang, nicht automatisch auf Google Maps.
+      </p>
+    </section>
+
+    <!-- HÄUFIGE FRAGEN -->
+
+    <section class="faq-section">
+      <div class="container faq-layout">
+        <div>
+          <p class="eyebrow">05 / Gut zu wissen</p>
+          <h2>Ihre Fragen.<br>Unser Einstieg.</h2>
+        </div>
+
+        <div>
+          <details>
+            <summary>Was gehört zu meinem Projekt?</summary>
+            <p>
+              Wir vereinbaren vorab, welche Räume aufgenommen
+              und welche Funktionen umgesetzt werden.
+              Website-Einbindung und Google Maps sind Teil
+              der Projektplanung. Die Details halten wir
+              im Angebot fest.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              Wie bereiten wir den Aufnahmetermin vor?
+            </summary>
+            <p>
+              Wir stimmen mit Ihnen ab, welche Bereiche gezeigt
+              werden, wann die Aufnahme stattfindet und was
+              vorher entfernt oder aufgeräumt werden soll.
+              Personen und vertrauliche Inhalte sollen nicht
+              Teil der Aufnahmen sein.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              Kümmert sich ReMo 360 um die Website-Einbindung?
+            </summary>
+            <p>
+              Wir bereiten den Rundgang zur Einbindung vor
+              und besprechen die technische Umsetzung
+              mit Ihnen oder Ihrer Webagentur. Wer die
+              Einbindung durchführt, wird im Angebot vereinbart.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              Ist der Rundgang auf Google Maps identisch?
+            </summary>
+            <p>
+              Beide Veröffentlichungswege werden separat
+              geplant. Individuelle Elemente wie Logos,
+              Infopunkte und Buchungslinks sind für den
+              Website-Rundgang vorgesehen. Welche Darstellung
+              auf Google Maps möglich ist, prüfen wir im Projekt.
+            </p>
+          </details>
+
+          <details>
+            <summary>
+              Was ist mit Hosting und späteren Änderungen?
+            </summary>
+            <p>
+              Hosting, Vertragslaufzeit, laufende Kosten und
+              spätere Aktualisierungen werden vorab vereinbart.
+              Eine laufende Betreuung kann auf Wunsch
+              Bestandteil des Angebots werden.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <!-- KONTAKT -->
+
+    <section class="container section" id="kontakt">
+      <div class="contact-layout">
+        <div>
+          <p class="eyebrow">06 / Kontakt</p>
+
+          <h2>
+            Zeigen wir,<br>
+            was Ihren Ort<br>
+            <em>besonders macht.</em>
+          </h2>
+
+          <p class="contact-description">
+            Erzählen Sie uns von Ihren Räumen und Ihrer Idee.
+            Gemeinsam klären wir, welcher Rundgang
+            zu Ihrem Vorhaben passt.
+          </p>
+        </div>
+
+        <div class="contact-card">
+          <span class="placeholder-badge">
+            Kontaktdaten folgen
+          </span>
+
+          <h3>Ihr direkter Draht zu ReMo 360.</h3>
+
+          <p>
+            Die Kontaktmöglichkeiten werden vor dem
+            offiziellen Start ergänzt.
+          </p>
+
+          <!-- Hier später echte Kontaktdaten einsetzen. -->
+          <dl class="contact-details">
+            <div>
+              <dt>E-Mail</dt>
+              <dd>[E-Mail-Adresse ergänzen]</dd>
+            </div>
+
+            <div>
+              <dt>Telefon</dt>
+              <dd>[Telefonnummer ergänzen]</dd>
+            </div>
+
+            <div>
+              <dt>Einsatzgebiet</dt>
+              <dd>[Region ergänzen]</dd>
+            </div>
+          </dl>
+
+          <p class="small-note">
+            Dieser Entwurf enthält noch kein aktives
+            Kontaktformular und versendet keine Anfragen.
+          </p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+
+  <footer class="footer">
+    <div class="container footer-top">
+      <a class="logo" href="#start" aria-label="Zur Startseite">
+        ReMo
+        <span class="logo-number">
+          360<span class="logo-degree">°</span>
+        </span>
+      </a>
+
+      <p>Räume zeigen. Gäste einladen.</p>
+
+      <div>
+        <button
+          class="legal-button"
+          type="button"
+          data-dialog="impressum"
+        >
+          Impressum
+        </button>
+
+        <button
+          class="legal-button"
+          type="button"
+          data-dialog="datenschutz"
+        >
+          Datenschutz
+        </button>
+      </div>
+    </div>
+
+    <div class="container footer-bottom">
+      <span>© <span id="year">2026</span> ReMo 360</span>
+      <span>360°-Rundgänge für Website & Google Maps</span>
+    </div>
+  </footer>
+
+  <!-- IMPRESSUM: PLATZHALTER -->
+
+  <dialog id="impressum" aria-labelledby="impressum-title">
+    <div class="dialog-heading">
+      <h2 id="impressum-title">Impressum</h2>
+
+      <button
+        class="dialog-close"
+        type="button"
+        aria-label="Impressum schließen"
+      >
+        ×
+      </button>
+    </div>
+
+    <p class="legal-warning">
+      Platzhalter – vor dem öffentlichen Start
+      vervollständigen und prüfen.
+    </p>
+
+    <p>ReMo 360</p>
+
+    <p>
+      [Vollständiger Name / rechtlicher Anbieter]<br>
+      [Ladungsfähige Anschrift]<br>
+      [Postleitzahl und Ort]
+    </p>
+
+    <p>
+      Kontakt:<br>
+      [E-Mail-Adresse]<br>
+      [Weitere erforderliche Kontaktangaben]
+    </p>
+
+    <p>
+      [Weitere nach Rechtsform und Tätigkeit erforderliche
+      Angaben ergänzen.]
+    </p>
+
+    <p>Dieser Text ist kein fertiges Impressum.</p>
+  </dialog>
+
+  <!-- DATENSCHUTZ: PLATZHALTER -->
+
+  <dialog id="datenschutz" aria-labelledby="datenschutz-title">
+    <div class="dialog-heading">
+      <h2 id="datenschutz-title">Datenschutz</h2>
+
+      <button
+        class="dialog-close"
+        type="button"
+        aria-label="Datenschutzhinweise schließen"
+      >
+        ×
+      </button>
+    </div>
+
+    <p class="legal-warning">
+      Platzhalter – kein veröffentlichungsfertiger Rechtstext.
+    </p>
+
+    <p>
+      Die Datenschutzhinweise müssen für den tatsächlichen
+      Betrieb dieser Website erstellt werden.
+    </p>
+
+    <p>Dabei sind insbesondere zu berücksichtigen:</p>
+
+    <ul>
+      <li>Verantwortlicher und Kontaktmöglichkeiten</li>
+      <li>Hosting und technische Zugriffsdaten</li>
+      <li>Kontaktaufnahme und Verarbeitung von Anfragen</li>
+      <li>Später eingebundene externe Rundgänge</li>
+      <li>Gegebenenfalls eingebundene Google-Inhalte</li>
+      <li>Rechtsgrundlagen und Speicherdauer</li>
+      <li>Empfänger und gegebenenfalls Drittlandübermittlungen</li>
+      <li>Betroffenenrechte und zuständige Aufsichtsbehörde</li>
+      <li>Gegebenenfalls erforderliches Einwilligungsmanagement</li>
+    </ul>
+
+    <p>
+      Im aktuellen Entwurf werden keine externen Rundgänge,
+      Analysewerkzeuge oder externen Schriftarten eingebunden.
+      Die Datenverarbeitung durch den Hostinganbieter ist
+      gesondert zu berücksichtigen.
+    </p>
+  </dialog>
+
+  <script>
+    // MOBILE NAVIGATION
+
+    const menuToggle = document.getElementById("menu-toggle");
+    const navigation = document.getElementById("navigation");
+
+    function closeMenu() {
+      navigation.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Navigation öffnen");
+    }
+
+    menuToggle.addEventListener("click", function () {
+      const isOpen =
+        menuToggle.getAttribute("aria-expanded") === "true";
+
+      navigation.classList.toggle("open", !isOpen);
+      menuToggle.setAttribute("aria-expanded", String(!isOpen));
+      menuToggle.setAttribute(
+        "aria-label",
+        isOpen ? "Navigation öffnen" : "Navigation schließen"
+      );
+    });
+
+    navigation.querySelectorAll("a").forEach(function (link) {
+      link.addEventListener("click", closeMenu);
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!event.target.closest(".navigation")) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+
+    window
+      .matchMedia("(min-width: 761px)")
+      .addEventListener("change", closeMenu);
+
+    // AKTUELLES JAHR
+
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+
+    // RECHTSTEXT-DIALOGE
+
+    document.querySelectorAll("[data-dialog]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        const dialog = document.getElementById(button.dataset.dialog);
+
+        dialog.showModal();
+        document.body.classList.add("modal-open");
+      });
+    });
+
+    document.querySelectorAll("dialog").forEach(function (dialog) {
+      dialog
+        .querySelector(".dialog-close")
+        .addEventListener("click", function () {
+          dialog.close();
+        });
+
+      dialog.addEventListener("close", function () {
+        document.body.classList.remove("modal-open");
+      });
+
+      dialog.addEventListener("click", function (event) {
+        const rect = dialog.getBoundingClientRect();
+
+        const clickedOutside =
+          event.clientX < rect.left ||
+          event.clientX > rect.right ||
+          event.clientY < rect.top ||
+          event.clientY > rect.bottom;
+
+        if (clickedOutside) {
+          dialog.close();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
