@@ -268,6 +268,24 @@
 
     @media (max-width: 380px) { .steps { grid-template-columns: 1fr; } }
     @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+  /* Einzelangebot */
+.offer { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 24px; }
+.offer-main { padding: 40px 36px; background: var(--ink); color: var(--white); border-radius: var(--radius); display: flex; flex-direction: column; align-items: flex-start; }
+.offer-label { margin-bottom: 18px; color: var(--light); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+.offer-main h3 { font-family: Georgia, serif; font-size: 2.1rem; font-weight: 400; margin-bottom: 16px; }
+.offer-main p { color: var(--muted-dark); font-size: 0.95rem; }
+.offer-price { margin-top: auto; padding-top: 16px; color: var(--white) !important; font-weight: 700; font-size: 1rem !important; }
+.offer-details { padding: 36px; background: var(--white); border: 2px solid var(--ink); border-radius: var(--radius); }
+.offer-details h3 { font-size: 1.05rem; margin: 0 0 12px; }
+.offer-details h3:not(:first-child) { margin-top: 28px; padding-top: 24px; border-top: 1px solid var(--line); }
+.offer-list { margin: 0; padding: 0; list-style: none; }
+.offer-list li { position: relative; padding: 7px 0 7px 26px; font-size: 0.9rem; }
+.offer-list li::before { content: "✓"; position: absolute; left: 0; color: var(--ink-2); font-weight: 700; }
+
+@media (max-width: 760px) {
+  .offer { grid-template-columns: 1fr; }
+  .offer-main, .offer-details { padding: 28px 22px; }
+}
   </style>
 </head>
 
@@ -287,7 +305,7 @@
         <a href="#nutzen">Nutzen</a>
         <a href="#referenzen">Referenzen</a>
         <a href="#ablauf">Ablauf</a>
-        <a href="#pakete">Pakete</a>
+     <a href="#angebot">Angebot</a>
         <a class="nav-cta" href="#kontakt">Projekt anfragen ↗</a>
       </nav>
     </div>
@@ -425,72 +443,57 @@
       </div>
     </section>
 
-    <!-- PAKETE -->
-    <section class="container section" id="pakete">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">05 / Leistungspakete</p>
-          <h2>Das passende Paket<br>für Ihre Räume.</h2>
-        </div>
-        <p>Wählen Sie den Umfang, der zu Ihrem Betrieb passt. Wir legen ihn gemeinsam fest und nennen Ihnen den Preis nach einem kurzen Gespräch.</p>
-      </div>
+  <!-- ANGEBOT -->
+<section class="container section" id="angebot">
+  <div class="section-head">
+    <div>
+      <p class="eyebrow">05 / Unser Angebot</p>
+      <h2>Ein Rundgang.<br>Alles aus einer Hand.</h2>
+    </div>
+    <p>Wir bieten eine Leistung an: den 360°-Rundgang für Ihre Räume. Wie groß er ausfällt, legen wir gemeinsam mit Ihnen fest.</p>
+  </div>
 
-      <div class="packages">
-        <article class="package">
-          <p class="package-cat">Kompakt</p>
-          <h3>Einblick</h3>
-          <p class="package-desc">Für kleinere Räumlichkeiten und einen fokussierten virtuellen Eindruck.</p>
-          <ul>
-            <li>Abstimmung und Aufnahme vor Ort</li>
-            <li>Bearbeitung der 360°-Panoramen</li>
-            <li>Verknüpfter virtueller Rundgang</li>
-            <li>Vorbereitung zur Website-Einbindung</li>
-            <li>Google-Maps-Veröffentlichung nach Prüfung der Voraussetzungen</li>
-          </ul>
-          <p class="package-price">Preis auf Anfrage</p>
-          <a class="button button-outline" href="#kontakt">Einblick anfragen ↗</a>
-        </article>
-
-        <article class="package featured">
-          <span class="package-tag">Für einen individuellen Auftritt</span>
-          <p class="package-cat">Individuell</p>
-          <h3>Raumgefühl</h3>
-          <p class="package-desc">Für mehrere Bereiche und zusätzliche Informationen im Website-Rundgang.</p>
-          <ul>
-            <li>Alle Leistungen aus „Einblick“</li>
-            <li>Erweiterter Aufnahmeumfang</li>
-            <li>Logo und individuelle Startansicht</li>
-            <li>Infopunkte im Website-Rundgang</li>
-            <li>Links etwa zu Speisekarte oder Buchung</li>
-            <li>Abstimmungsrunde vor Veröffentlichung</li>
-          </ul>
-          <p class="package-price">Preis auf Anfrage</p>
-          <a class="button button-light" href="#kontakt">Raumgefühl anfragen ↗</a>
-        </article>
-
-        <article class="package">
-          <p class="package-cat">Umfangreich</p>
-          <h3>Panorama</h3>
-          <p class="package-desc">Für größere Objekte, mehrere Etagen oder ein individuelles Raumkonzept.</p>
-          <ul>
-            <li>Alle Leistungen aus „Raumgefühl“</li>
-            <li>Individuelle Projektplanung</li>
-            <li>Mehrere Bereiche oder Etagen</li>
-            <li>Zusätzliche Inhalte nach Absprache</li>
-            <li>Optionale laufende Betreuung</li>
-            <li>Aktualisierungen separat vereinbar</li>
-          </ul>
-          <p class="package-price">Preis auf Anfrage</p>
-          <a class="button button-outline" href="#kontakt">Panorama anfragen ↗</a>
-        </article>
-      </div>
-
-      <p class="note" style="margin-top:22px">
-        Verbindlicher Leistungsumfang, Nutzungsrechte, Hosting, Laufzeit und mögliche Folgekosten werden im jeweiligen Angebot festgelegt.
-        Zusätzliche Gestaltungselemente beziehen sich auf den Website-Rundgang, nicht automatisch auf Google Maps.
+  <div class="offer">
+    <div class="offer-main">
+      <p class="offer-label">Unser Angebot</p>
+      <h3>Der ReMo-360-Rundgang</h3>
+      <p>
+        Wir nehmen Ihre Räume vor Ort auf, bearbeiten die Panoramen und verbinden sie zu einem
+        interaktiven Rundgang für Ihre Website. Auf Wunsch bereiten wir auch die Veröffentlichung
+        auf Google Maps vor.
       </p>
-    </section>
+      <p class="offer-price">Preis auf Anfrage</p>
+      <a class="button button-light" href="#kontakt">Rundgang anfragen ↗</a>
+    </div>
 
+    <div class="offer-details">
+      <h3>Das ist enthalten</h3>
+      <ul class="offer-list">
+        <li>Abstimmung und Vorbereitung des Aufnahmetermins</li>
+        <li>360°-Aufnahmen bei Ihnen vor Ort</li>
+        <li>Bearbeitung der Panoramen</li>
+        <li>Verknüpfter, interaktiver Rundgang für Ihre Website</li>
+        <li>Infopunkte und Links nach Absprache, etwa zu Speisekarte oder Buchung</li>
+        <li>Vorbereitung der Einbindung in Ihre Website</li>
+        <li>Veröffentlichung auf Google Maps nach Prüfung der Voraussetzungen</li>
+        <li>Abstimmungsrunde vor der Freigabe</li>
+      </ul>
+
+      <h3>Das legen wir gemeinsam fest</h3>
+      <ul class="offer-list">
+        <li>Anzahl der Räume und Aufnahmepunkte</li>
+        <li>Preis und Zahlungsbedingungen</li>
+        <li>Nutzungsrechte, Hosting und Laufzeit</li>
+        <li>Spätere Aktualisierungen oder laufende Betreuung</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="note" style="margin-top:22px">
+    Der verbindliche Leistungsumfang wird im Angebot festgelegt. Individuelle Gestaltungselemente
+    beziehen sich auf den Website-Rundgang, nicht automatisch auf Google Maps.
+  </p>
+</section>
     <!-- FAQ -->
     <section class="faq-wrap">
       <div class="container faq-layout">
