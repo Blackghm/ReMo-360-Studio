@@ -1,756 +1,173 @@
-
 <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
   <title>ReMo 360 | Interaktive Raumwelten</title>
-
-  <meta
-    name="description"
-    content="Interaktive ReMo-360-Konzeptdemo für ein Restaurant, eine Ferienwohnung und ein Studio."
-  >
-
-  <meta name="theme-color" content="#14251f">
+  <meta name="description" content="Interaktive ReMo-360-Konzeptdemo für ein Restaurant, eine Ferienwohnung und ein Studio.">
+  <meta name="theme-color" content="#0b1f3a">
 
   <style>
     :root {
-      --paper: #f7f6f1;
-      --ink: #20392f;
-      --muted: #758178;
-      --line: #dce2d7;
-      --accent: #d4e5b3;
-      --glass: rgba(20, 37, 31, 0.82);
+      --ink: #0b1f3a;
+      --ink-2: #12305a;
+      --white: #ffffff;
+      --cool: #eef0f3;
+      --line: #d5d9e0;
+      --muted: #5b6472;
+      --light: #c9d1de;
+      --glass: rgba(11, 31, 58, 0.86);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       color: var(--ink);
-      background: var(--paper);
+      background: var(--white);
       font-family: "Segoe UI", Arial, sans-serif;
     }
 
-    button,
-    a {
-      -webkit-tap-highlight-color: transparent;
-    }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button { font: inherit; cursor: pointer; }
+    button:focus-visible, a:focus-visible, canvas:focus-visible { outline: 3px solid #8fa8d0; outline-offset: 4px; }
+    button:disabled { opacity: 0.45; cursor: default; }
 
-    button {
-      font: inherit;
-      cursor: pointer;
-    }
+    .header { min-height: 80px; padding: 16px 34px; display: flex; justify-content: space-between; align-items: center; gap: 24px; background: var(--ink); color: var(--white); }
+    .brand { color: var(--white); text-decoration: none; font-size: 26px; font-weight: 700; letter-spacing: -1.5px; white-space: nowrap; }
+    .brand span { margin-left: 5px; font-weight: 300; }
+    .brand sup { color: var(--light); }
+    .header-caption { font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: var(--light); }
+    .back-link { color: var(--white); text-decoration: none; border-bottom: 1px solid var(--light); padding-bottom: 4px; font-size: 12px; }
 
-    button:focus-visible,
-    a:focus-visible,
-    canvas:focus-visible {
-      outline: 3px solid #9ebd77;
-      outline-offset: 4px;
-    }
+    .intro { max-width: 1500px; margin: auto; padding: 38px 34px 28px; display: flex; justify-content: space-between; align-items: end; gap: 32px; }
+    .eyebrow { margin: 0 0 12px; font-size: 10px; letter-spacing: 2.3px; text-transform: uppercase; font-weight: 700; color: var(--ink-2); }
+    h1 { margin: 0; font-size: clamp(30px, 4vw, 52px); font-weight: 400; letter-spacing: -2px; line-height: 1.12; }
+    h1 em { font-family: Georgia, serif; font-weight: 400; color: var(--muted); }
+    .intro-description { margin: 0; max-width: 390px; font-size: 13px; color: var(--muted); line-height: 1.8; }
 
-    button:disabled {
-      opacity: 0.45;
-      cursor: default;
-    }
+    .experience { max-width: 1500px; margin: 0 auto; padding: 0 24px; }
 
-    .header {
-      min-height: 84px;
-      padding: 18px 34px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 24px;
-      border-bottom: 1px solid var(--line);
-    }
+    .viewer { position: relative; height: clamp(540px, 72vh, 850px); overflow: hidden; border-radius: 12px; background: var(--ink-2); isolation: isolate; }
+    .viewer:fullscreen { width: 100%; height: 100%; border-radius: 0; }
+    #stage { position: absolute; inset: 0; }
+    #stage canvas { display: block; width: 100%; height: 100%; cursor: grab; touch-action: none; }
+    #stage canvas:active { cursor: grabbing; }
 
-    .brand {
-      color: var(--ink);
-      text-decoration: none;
-      font-size: 26px;
-      font-weight: 650;
-      letter-spacing: -1.5px;
-      white-space: nowrap;
-    }
+    .viewer::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: linear-gradient(180deg, rgba(7, 20, 38, 0.4), transparent 25%, transparent 65%, rgba(7, 20, 38, 0.65)); }
 
-    .brand span {
-      margin-left: 5px;
-      font-weight: 350;
-    }
+    .topbar { position: absolute; top: 22px; left: 22px; right: 22px; display: flex; justify-content: space-between; align-items: flex-start; gap: 18px; z-index: 4; pointer-events: none; }
+    .location, .demo-badge { backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.22); color: var(--white); background: var(--glass); border-radius: 8px; }
+    .location { padding: 15px 18px; max-width: 360px; }
+    .location small { display: block; margin-bottom: 5px; color: var(--light); text-transform: uppercase; letter-spacing: 1.7px; font-size: 9px; }
+    .location h2 { margin: 0 0 5px; font-size: 22px; font-family: Georgia, serif; font-weight: 400; }
+    .location p { margin: 0; color: var(--light); font-size: 11px; }
+    .demo-badge { padding: 9px 12px; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; text-align: center; }
 
-    .brand sup {
-      color: #87a16a;
-    }
+    .hotspots { position: absolute; inset: 0; z-index: 3; pointer-events: none; overflow: hidden; }
+    .hotspot { position: absolute; left: 0; top: 0; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: var(--white); border: 2px solid var(--white); background: rgba(11, 31, 58, 0.7); box-shadow: 0 0 0 7px rgba(255,255,255,0.16); backdrop-filter: blur(5px); pointer-events: auto; font-size: 20px; transition: background 0.2s; }
+    .hotspot:hover { background: var(--ink); }
+    .hotspot.info { width: 32px; height: 32px; background: var(--white); color: var(--ink); box-shadow: 0 0 0 5px rgba(255,255,255,0.2); font-family: Georgia, serif; font-size: 18px; border-color: var(--white); }
+    .hotspot-label { position: absolute; bottom: calc(100% + 12px); left: 50%; transform: translateX(-50%); background: var(--glass); color: var(--white); border: 1px solid rgba(255,255,255,0.22); border-radius: 5px; padding: 6px 10px; font-family: "Segoe UI", Arial, sans-serif; font-size: 10px; white-space: nowrap; pointer-events: none; }
 
-    .header-caption {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--muted);
-    }
+    .help { position: absolute; bottom: 103px; left: 50%; transform: translateX(-50%); z-index: 4; pointer-events: none; border: 1px solid rgba(255,255,255,0.22); background: var(--glass); color: var(--white); border-radius: 30px; padding: 9px 17px; font-size: 11px; white-space: nowrap; transition: opacity 0.4s; }
+    .help.hidden { opacity: 0; }
 
-    .back-link {
-      color: var(--ink);
-      text-decoration: none;
-      border-bottom: 1px solid #b8c2ab;
-      padding-bottom: 4px;
-      font-size: 12px;
-    }
+    .bottom-bar { position: absolute; bottom: 21px; left: 22px; right: 22px; z-index: 5; display: flex; justify-content: space-between; align-items: end; gap: 18px; }
+    .scene-menu { display: flex; gap: 7px; max-width: calc(100% - 205px); overflow-x: auto; padding: 4px; border-radius: 8px; background: var(--glass); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.22); }
+    .scene-button { flex-shrink: 0; padding: 11px 14px; border: 0; border-radius: 5px; color: var(--light); background: transparent; font-size: 11px; white-space: nowrap; }
+    .scene-button span { opacity: 0.65; margin-right: 7px; }
+    .scene-button.active { background: var(--white); color: var(--ink); font-weight: 700; }
 
-    .intro {
-      max-width: 1500px;
-      margin: auto;
-      padding: 38px 34px 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 32px;
-    }
+    .tools { display: flex; gap: 5px; padding: 4px; border: 1px solid rgba(255,255,255,0.22); border-radius: 8px; background: var(--glass); backdrop-filter: blur(15px); }
+    .tool { width: 36px; height: 36px; border: 0; border-radius: 5px; background: transparent; color: var(--white); font-size: 19px; }
+    .tool:hover, .tool.active { background: rgba(255,255,255,0.2); }
 
-    .eyebrow {
-      margin: 0 0 12px;
-      font-size: 10px;
-      letter-spacing: 2.3px;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
+    .selection { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
+    .property { position: relative; display: flex; align-items: center; gap: 15px; padding: 19px; border: 2px solid var(--line); border-radius: 8px; background: var(--white); text-align: left; color: var(--ink); }
+    .property:hover { border-color: var(--ink-2); }
+    .property.active { border-color: var(--ink); background: var(--cool); }
+    .property-symbol { width: 47px; height: 47px; flex-shrink: 0; display: grid; place-items: center; background: var(--ink); color: var(--white); border-radius: 50%; font-size: 22px; font-family: Georgia, serif; font-style: italic; }
+    .property small { display: block; margin-bottom: 5px; color: var(--muted); font-size: 9px; text-transform: uppercase; letter-spacing: 1.3px; font-weight: 700; }
+    .property strong { display: block; font-weight: 600; font-size: 15px; }
+    .property-arrow { margin-left: auto; font-size: 21px; }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(30px, 4vw, 52px);
-      font-weight: 400;
-      letter-spacing: -2px;
-      line-height: 1.12;
-    }
+    .disclaimer { max-width: 1500px; margin: 0 auto; padding: 20px 34px 36px; color: var(--muted); font-size: 11px; line-height: 1.9; }
 
-    h1 em {
-      font-family: Georgia, serif;
-      font-weight: 400;
-    }
+    .loading { position: absolute; inset: 0; z-index: 12; display: grid; place-items: center; padding: 35px; background: var(--ink); color: var(--white); text-align: center; font-size: 14px; line-height: 1.8; }
+    .loading[hidden] { display: none; }
 
-    .intro-description {
-      margin: 0;
-      max-width: 390px;
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .experience {
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    .viewer {
-      position: relative;
-      height: clamp(540px, 72vh, 850px);
-      overflow: hidden;
-      border-radius: 12px;
-      background: #23352f;
-      isolation: isolate;
-    }
-
-    .viewer:fullscreen {
-      width: 100%;
-      height: 100%;
-      border-radius: 0;
-    }
-
-    #stage {
-      position: absolute;
-      inset: 0;
-    }
-
-    #stage canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
-      cursor: grab;
-      touch-action: none;
-    }
-
-    #stage canvas:active {
-      cursor: grabbing;
-    }
-
-    .viewer::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      background:
-        linear-gradient(
-          180deg,
-          rgba(10, 24, 18, 0.35),
-          transparent 25%,
-          transparent 65%,
-          rgba(10, 24, 18, 0.6)
-        );
-    }
-
-    .topbar {
-      position: absolute;
-      top: 22px;
-      left: 22px;
-      right: 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-      z-index: 4;
-      pointer-events: none;
-    }
-
-    .location,
-    .demo-badge {
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: white;
-      background: var(--glass);
-      border-radius: 8px;
-    }
-
-    .location {
-      padding: 15px 18px;
-      max-width: 360px;
-    }
-
-    .location small {
-      display: block;
-      margin-bottom: 5px;
-      color: #d1ddc6;
-      text-transform: uppercase;
-      letter-spacing: 1.7px;
-      font-size: 9px;
-    }
-
-    .location h2 {
-      margin: 0 0 5px;
-      font-size: 22px;
-      font-family: Georgia, serif;
-      font-weight: 400;
-    }
-
-    .location p {
-      margin: 0;
-      color: #d4ded4;
-      font-size: 11px;
-    }
-
-    .demo-badge {
-      padding: 9px 12px;
-      font-size: 9px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      text-align: center;
-    }
-
-    .hotspots {
-      position: absolute;
-      inset: 0;
-      z-index: 3;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .hotspot {
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      color: white;
-      border: 1px solid rgba(255,255,255,0.8);
-      background: rgba(24, 49, 35, 0.55);
-      box-shadow: 0 0 0 7px rgba(255,255,255,0.13);
-      backdrop-filter: blur(5px);
-      pointer-events: auto;
-      font-size: 20px;
-      transition: background 0.2s;
-    }
-
-    .hotspot:hover {
-      background: rgba(43, 75, 48, 0.95);
-    }
-
-    .hotspot.info {
-      width: 32px;
-      height: 32px;
-      background: #f3f4e9;
-      color: var(--ink);
-      box-shadow: 0 0 0 5px rgba(255,255,255,0.15);
-      font-family: Georgia, serif;
-      font-size: 18px;
-    }
-
-    .hotspot-label {
-      position: absolute;
-      bottom: calc(100% + 12px);
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--glass);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 5px;
-      padding: 6px 10px;
-      font-family: "Segoe UI", Arial, sans-serif;
-      font-size: 10px;
-      white-space: nowrap;
-      pointer-events: none;
-    }
-
-    .help {
-      position: absolute;
-      bottom: 103px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 4;
-      pointer-events: none;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: var(--glass);
-      color: white;
-      border-radius: 30px;
-      padding: 9px 17px;
-      font-size: 11px;
-      white-space: nowrap;
-      transition: opacity 0.4s;
-    }
-
-    .help.hidden {
-      opacity: 0;
-    }
-
-    .bottom-bar {
-      position: absolute;
-      bottom: 21px;
-      left: 22px;
-      right: 22px;
-      z-index: 5;
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 18px;
-    }
-
-    .scene-menu {
-      display: flex;
-      gap: 7px;
-      max-width: calc(100% - 205px);
-      overflow-x: auto;
-      padding: 4px;
-      border-radius: 8px;
-      background: var(--glass);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255,255,255,0.2);
-    }
-
-    .scene-button {
-      flex-shrink: 0;
-      padding: 11px 14px;
-      border: 0;
-      border-radius: 5px;
-      color: #e7ede2;
-      background: transparent;
-      font-size: 11px;
-      white-space: nowrap;
-    }
-
-    .scene-button span {
-      opacity: 0.6;
-      margin-right: 7px;
-    }
-
-    .scene-button.active {
-      background: var(--accent);
-      color: var(--ink);
-    }
-
-    .tools {
-      display: flex;
-      gap: 5px;
-      padding: 4px;
-      border: 1px solid rgba(255,255,255,0.2);
-      border-radius: 8px;
-      background: var(--glass);
-      backdrop-filter: blur(15px);
-    }
-
-    .tool {
-      width: 36px;
-      height: 36px;
-      border: 0;
-      border-radius: 5px;
-      background: transparent;
-      color: white;
-      font-size: 19px;
-    }
-
-    .tool:hover,
-    .tool.active {
-      background: rgba(255,255,255,0.17);
-    }
-
-    .selection {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 18px;
-    }
-
-    .property {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      padding: 19px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: #fffefa;
-      text-align: left;
-      color: var(--ink);
-    }
-
-    .property:hover {
-      border-color: #8ca079;
-    }
-
-    .property.active {
-      border-color: #7e9869;
-      background: #edf2e5;
-    }
-
-    .property-symbol {
-      width: 47px;
-      height: 47px;
-      flex-shrink: 0;
-      display: grid;
-      place-items: center;
-      background: #e8edde;
-      border-radius: 50%;
-      font-size: 24px;
-      font-family: Georgia, serif;
-      font-style: italic;
-    }
-
-    .property small {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--muted);
-      font-size: 9px;
-      text-transform: uppercase;
-      letter-spacing: 1.3px;
-    }
-
-    .property strong {
-      display: block;
-      font-weight: 500;
-      font-size: 15px;
-    }
-
-    .property-arrow {
-      margin-left: auto;
-      font-size: 21px;
-    }
-
-    .disclaimer {
-      max-width: 1500px;
-      margin: 0 auto;
-      padding: 20px 34px 36px;
-      color: var(--muted);
-      font-size: 11px;
-      line-height: 1.9;
-    }
-
-    .loading {
-      position: absolute;
-      inset: 0;
-      z-index: 12;
-      display: grid;
-      place-items: center;
-      padding: 35px;
-      background: #20362c;
-      color: white;
-      text-align: center;
-      font-size: 14px;
-      line-height: 1.8;
-    }
-
-    .loading[hidden] {
-      display: none;
-    }
-
-    dialog {
-      width: min(430px, calc(100% - 36px));
-      padding: 30px;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      background: var(--paper);
-      color: var(--ink);
-    }
-
-    dialog::backdrop {
-      background: rgba(8, 24, 15, 0.6);
-      backdrop-filter: blur(6px);
-    }
-
-    dialog h2 {
-      margin: 15px 0;
-      font-family: Georgia, serif;
-      font-weight: 400;
-      font-size: 29px;
-    }
-
-    dialog p {
-      font-size: 14px;
-      color: #647368;
-      line-height: 1.8;
-    }
-
-    .close-dialog {
-      display: block;
-      margin-left: auto;
-      border: 0;
-      color: var(--ink);
-      background: transparent;
-      font-size: 25px;
-    }
-
-    .dialog-label {
-      color: #7e916a;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-    }
+    dialog { width: min(430px, calc(100% - 36px)); padding: 30px; border: 0; border-radius: 12px; background: var(--white); color: var(--ink); }
+    dialog::backdrop { background: rgba(7, 20, 38, 0.72); backdrop-filter: blur(6px); }
+    dialog h2 { margin: 15px 0; font-family: Georgia, serif; font-weight: 400; font-size: 29px; }
+    dialog p { font-size: 14px; color: var(--muted); line-height: 1.8; }
+    .close-dialog { display: block; margin-left: auto; border: 0; color: var(--ink); background: transparent; font-size: 25px; }
+    .dialog-label { color: var(--ink-2); font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
 
     @media (max-width: 760px) {
-      .header {
-        min-height: 70px;
-        padding: 16px 20px;
-      }
-
-      .header-caption {
-        display: none;
-      }
-
-      .intro {
-        padding: 28px 20px 24px;
-        display: block;
-      }
-
-      .intro-description {
-        margin-top: 18px;
-        max-width: 550px;
-      }
-
-      .experience {
-        padding-inline: 10px;
-      }
-
-      .viewer {
-        height: 660px;
-        max-height: 83svh;
-        min-height: 500px;
-      }
-
-      .topbar {
-        top: 14px;
-        left: 14px;
-        right: 14px;
-      }
-
-      .location {
-        padding: 12px 14px;
-      }
-
-      .location h2 {
-        font-size: 20px;
-      }
-
-      .demo-badge {
-        max-width: 100px;
-        font-size: 8px;
-        line-height: 1.6;
-      }
-
-      .bottom-bar {
-        left: 12px;
-        right: 12px;
-        bottom: 13px;
-        flex-direction: column-reverse;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .scene-menu {
-        width: 100%;
-        max-width: 100%;
-        justify-content: flex-start;
-      }
-
-      .scene-button {
-        flex: 1;
-        padding: 11px 10px;
-      }
-
-      .help {
-        bottom: 133px;
-        font-size: 10px;
-        max-width: calc(100% - 30px);
-        white-space: normal;
-        text-align: center;
-      }
-
-      .selection {
-        grid-template-columns: 1fr;
-        gap: 9px;
-        margin-top: 12px;
-      }
-
-      .property {
-        padding: 14px 17px;
-      }
-
-      .property-symbol {
-        width: 39px;
-        height: 39px;
-        font-size: 21px;
-      }
-
-      .property strong {
-        font-size: 14px;
-      }
-
-      .disclaimer {
-        padding: 18px 20px 30px;
-      }
-
-      .hotspot-label {
-        font-size: 9px;
-      }
+      .header { min-height: 70px; padding: 16px 20px; }
+      .header-caption { display: none; }
+      .intro { padding: 28px 20px 24px; display: block; }
+      .intro-description { margin-top: 18px; max-width: 550px; }
+      .experience { padding-inline: 10px; }
+      .viewer { height: 660px; max-height: 83svh; min-height: 500px; }
+      .topbar { top: 14px; left: 14px; right: 14px; }
+      .location { padding: 12px 14px; }
+      .location h2 { font-size: 20px; }
+      .demo-badge { max-width: 100px; font-size: 8px; line-height: 1.6; }
+      .bottom-bar { left: 12px; right: 12px; bottom: 13px; flex-direction: column-reverse; align-items: center; gap: 12px; }
+      .scene-menu { width: 100%; max-width: 100%; justify-content: flex-start; }
+      .scene-button { flex: 1; padding: 11px 10px; }
+      .help { bottom: 133px; font-size: 10px; max-width: calc(100% - 30px); white-space: normal; text-align: center; }
+      .selection { grid-template-columns: 1fr; gap: 9px; margin-top: 12px; }
+      .property { padding: 14px 17px; }
+      .property-symbol { width: 39px; height: 39px; font-size: 20px; }
+      .property strong { font-size: 14px; }
+      .disclaimer { padding: 18px 20px 30px; }
+      .hotspot-label { font-size: 9px; }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      * {
-        scroll-behavior: auto !important;
-        transition: none !important;
-      }
+    @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+
+    /* Einbettungsmodus für die ReMo-360-Startseite */
+    body.embedded { margin: 0; background: var(--white); }
+    body.embedded .header, body.embedded .intro, body.embedded .disclaimer { display: none; }
+    body.embedded .experience { width: 100%; max-width: none; margin: 0; padding: 0; }
+    body.embedded .viewer { height: 610px; min-height: 0; max-height: none; border-radius: 0; }
+    body.embedded .selection { margin: 0; padding: 14px; gap: 10px; background: var(--white); }
+    body.embedded .property { padding: 14px; }
+    body.embedded .viewer:fullscreen { width: 100%; height: 100%; min-height: 0; max-height: none; }
+
+    @media (max-width: 760px) {
+      body.embedded .viewer { height: 510px; min-height: 0; max-height: none; }
+      body.embedded .selection { grid-template-columns: 1fr; padding: 10px; gap: 8px; }
+      body.embedded .property { padding: 10px 14px; }
+      body.embedded .property-symbol { width: 32px; height: 32px; }
     }
- /* Einbettungsmodus für die ReMo-360-Startseite */
-
-body.embedded {
-  margin: 0;
-  background: #f7f6f1;
-}
-
-body.embedded .header,
-body.embedded .intro,
-body.embedded .disclaimer {
-  display: none;
-}
-
-body.embedded .experience {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding: 0;
-}
-
-body.embedded .viewer {
-  height: 610px;
-  min-height: 0;
-  max-height: none;
-  border-radius: 0;
-}
-
-body.embedded .selection {
-  margin: 0;
-  padding: 14px;
-  gap: 10px;
-  background: #f7f6f1;
-}
-
-body.embedded .property {
-  padding: 14px;
-}
-
-body.embedded .viewer:fullscreen {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  max-height: none;
-}
-
-@media (max-width: 760px) {
-  body.embedded .viewer {
-    height: 510px;
-    min-height: 0;
-    max-height: none;
-  }
-
-  body.embedded .selection {
-    grid-template-columns: 1fr;
-    padding: 10px;
-    gap: 8px;
-  }
-
-  body.embedded .property {
-    padding: 10px 14px;
-  }
-
-  body.embedded .property-symbol {
-    width: 32px;
-    height: 32px;
-  }
-}
   </style>
 </head>
 
 <body>
   <script>
-  const embedded =
-    new URLSearchParams(window.location.search).get("embed") === "1";
+    if (new URLSearchParams(window.location.search).get("embed") === "1") {
+      document.body.classList.add("embedded");
+    }
+  </script>
 
-  if (embedded) {
-    document.body.classList.add("embedded");
-  }
-</script>
   <header class="header">
-    <a class="brand" href="index.html">
-      ReMo <span>360<sup>°</sup></span>
-    </a>
-
-    <span class="header-caption">
-      Räume entdecken · Perspektiven erleben
-    </span>
-
-    <a class="back-link" href="index.html">
-      Zur Website ↗
-    </a>
+    <a class="brand" href="index.html">ReMo <span>360<sup>°</sup></span></a>
+    <span class="header-caption">Räume entdecken · Perspektiven erleben</span>
+    <a class="back-link" href="index.html">Zur Website ↗</a>
   </header>
 
   <main>
     <section class="intro">
       <div>
         <p class="eyebrow">Die ReMo 360 Konzeptdemo</p>
-
-        <h1>
-          Nicht nur ansehen.<br>
-          <em>Schon einmal da sein.</em>
-        </h1>
+        <h1>Nicht nur ansehen.<br><em>Schon einmal da sein.</em></h1>
       </div>
-
       <p class="intro-description">
-        Entdecken Sie drei beispielhafte Raumwelten.
-        Ziehen Sie die Ansicht mit Maus oder Finger und
-        wechseln Sie über die markierten Punkte die Perspektive.
+        Entdecken Sie drei beispielhafte Raumwelten. Ziehen Sie die Ansicht mit Maus oder Finger und wechseln Sie über die markierten Punkte die Perspektive.
       </p>
     </section>
 
@@ -762,160 +179,71 @@ body.embedded .viewer:fullscreen {
           <div class="location">
             <small id="category">Restaurant / Konzept</small>
             <h2 id="property-title">Restaurant Lindenraum</h2>
-            <p id="scene-title" aria-live="polite">
-              Perspektive 01 · Gastraum
-            </p>
+            <p id="scene-title" aria-live="polite">Perspektive 01 · Gastraum</p>
           </div>
-
-          <div class="demo-badge">
-            Illustrative 3D-Demo<br>
-            Keine Kundenaufnahmen
-          </div>
+          <div class="demo-badge">Illustrative 3D-Demo<br>Keine Kundenaufnahmen</div>
         </div>
 
         <div class="hotspots" id="hotspots"></div>
-
-        <div class="help" id="help">
-          Ziehen zum Umsehen · Punkte anklicken zum Wechseln
-        </div>
+        <div class="help" id="help">Ziehen zum Umsehen · Punkte anklicken zum Wechseln</div>
 
         <div class="bottom-bar">
-          <nav
-            class="scene-menu"
-            id="scene-menu"
-            aria-label="Perspektiven auswählen"
-          ></nav>
+          <nav class="scene-menu" id="scene-menu" aria-label="Perspektiven auswählen"></nav>
 
           <div class="tools" aria-label="Ansichtssteuerung">
-            <button
-              class="tool"
-              id="zoom-in"
-              aria-label="Vergrößern"
-              title="Vergrößern"
-            >+</button>
-
-            <button
-              class="tool"
-              id="zoom-out"
-              aria-label="Verkleinern"
-              title="Verkleinern"
-            >−</button>
-
-            <button
-              class="tool"
-              id="rotate"
-              aria-label="Automatische Drehung"
-              aria-pressed="false"
-              title="Automatische Drehung"
-            >↻</button>
-
-            <button
-              class="tool"
-              id="reset"
-              aria-label="Ansicht zurücksetzen"
-              title="Ansicht zurücksetzen"
-            >⌂</button>
-
-            <button
-              class="tool"
-              id="fullscreen"
-              aria-label="Vollbild"
-              title="Vollbild"
-            >⛶</button>
+            <button class="tool" id="zoom-in" aria-label="Vergrößern" title="Vergrößern">+</button>
+            <button class="tool" id="zoom-out" aria-label="Verkleinern" title="Verkleinern">−</button>
+            <button class="tool" id="rotate" aria-label="Automatische Drehung" aria-pressed="false" title="Automatische Drehung">↻</button>
+            <button class="tool" id="reset" aria-label="Ansicht zurücksetzen" title="Ansicht zurücksetzen">⌂</button>
+            <button class="tool" id="fullscreen" aria-label="Vollbild" title="Vollbild">⛶</button>
           </div>
         </div>
 
         <div class="loading" id="loading" role="status">
-          <div>
-            ReMo 360<br>
-            Die Beispielräume werden vorbereitet …
-          </div>
+          <div>ReMo 360<br>Die Beispielräume werden vorbereitet …</div>
         </div>
       </div>
 
       <div class="selection" aria-label="Beispielobjekt auswählen">
-        <button
-          class="property active"
-          data-property="restaurant"
-          aria-pressed="true"
-        >
+        <button class="property active" data-property="restaurant" aria-pressed="true">
           <span class="property-symbol" aria-hidden="true">R</span>
-          <span>
-            <small>Restaurant</small>
-            <strong>Lindenraum</strong>
-          </span>
+          <span><small>Restaurant</small><strong>Lindenraum</strong></span>
           <span class="property-arrow" aria-hidden="true">↗</span>
         </button>
-
-        <button
-          class="property"
-          data-property="apartment"
-          aria-pressed="false"
-        >
+        <button class="property" data-property="apartment" aria-pressed="false">
           <span class="property-symbol" aria-hidden="true">F</span>
-          <span>
-            <small>Ferienwohnung</small>
-            <strong>Apartment Morgenlicht</strong>
-          </span>
+          <span><small>Ferienwohnung</small><strong>Apartment Morgenlicht</strong></span>
           <span class="property-arrow" aria-hidden="true">↗</span>
         </button>
-
-        <button
-          class="property"
-          data-property="studio"
-          aria-pressed="false"
-        >
+        <button class="property" data-property="studio" aria-pressed="false">
           <span class="property-symbol" aria-hidden="true">S</span>
-          <span>
-            <small>Studio</small>
-            <strong>Studio Balance</strong>
-          </span>
+          <span><small>Studio</small><strong>Studio Balance</strong></span>
           <span class="property-arrow" aria-hidden="true">↗</span>
         </button>
       </div>
     </section>
 
     <p class="disclaimer">
-      Konzeptdarstellung: Alle Räume, Objektnamen und
-      Ausstattungsangaben dieser Demo sind fiktiv.
-      Dargestellt werden künstlich erzeugte 3D-Räume,
-      keine fotografischen 360°-Aufnahmen und keine
-      maßhaltigen Bestandsmodelle. Eine Veröffentlichung
-      auf Google Maps ist nicht Bestandteil dieser Demo.
+      Konzeptdarstellung: Alle Räume, Objektnamen und Ausstattungsangaben dieser Demo sind fiktiv. Dargestellt werden künstlich erzeugte 3D-Räume, keine fotografischen 360°-Aufnahmen und keine maßhaltigen Bestandsmodelle. Eine Veröffentlichung auf Google Maps ist nicht Bestandteil dieser Demo.
     </p>
   </main>
 
   <dialog id="info-dialog" aria-labelledby="info-title">
-    <button
-      class="close-dialog"
-      id="close-info"
-      aria-label="Information schließen"
-    >×</button>
-
+    <button class="close-dialog" id="close-info" aria-label="Information schließen">×</button>
     <span class="dialog-label">Ein Detail entdecken</span>
     <h2 id="info-title"></h2>
     <p id="info-text"></p>
   </dialog>
 
-  <!--
-    Externe Bibliothek für diese Vorschau.
-    Für den Produktivbetrieb lokal hosten.
-  -->
   <script type="module">
     const loading = document.getElementById("loading");
 
     try {
-      const THREE = await import(
-        "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
-      );
-
+      const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js");
       initialize(THREE);
     } catch (error) {
       loading.textContent =
-        "Die 3D-Demo konnte nicht geladen werden. " +
-        "Bitte prüfen Sie Ihre Internetverbindung und " +
-        "ob Ihr Browser WebGL unterstützt.";
-
+        "Die 3D-Demo konnte nicht geladen werden. Bitte prüfen Sie Ihre Internetverbindung und ob Ihr Browser WebGL unterstützt.";
       console.error(error);
     }
 
@@ -926,15 +254,9 @@ body.embedded .viewer:fullscreen {
       const sceneMenu = document.getElementById("scene-menu");
       const help = document.getElementById("help");
 
-      const reducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-      const renderer = new THREE.WebGLRenderer({
-        antialias: true,
-        alpha: false
-      });
-
+      const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.75));
       renderer.outputColorSpace = THREE.SRGBColorSpace;
       renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -943,10 +265,8 @@ body.embedded .viewer:fullscreen {
       renderer.domElement.tabIndex = 0;
       renderer.domElement.setAttribute(
         "aria-label",
-        "Interaktive Raumansicht. " +
-        "Mit Pfeiltasten umsehen. Plus und Minus ändern den Zoom."
+        "Interaktive Raumansicht. Mit Pfeiltasten umsehen. Plus und Minus ändern den Zoom."
       );
-
       stage.appendChild(renderer.domElement);
 
       const camera = new THREE.PerspectiveCamera(70, 1, 0.05, 80);
@@ -969,124 +289,62 @@ body.embedded .viewer:fullscreen {
       const projected = new THREE.Vector3();
       const difference = new THREE.Vector3();
 
+      /* Farbpalette der Räume: Marineblau, Weiß, Grau */
+      const P = {
+        navy: "#0b1f3a",
+        navy2: "#12305a",
+        navy3: "#2b4a78",
+        slate: "#4d6788",
+        steel: "#8a97ab",
+        grey: "#aab2bf",
+        silver: "#c9d1de",
+        mist: "#e6e9ee",
+        white: "#f5f6f8",
+        floor: "#b4b0a8",
+        floorLine: "#9d9992",
+        wood: "#8e8a83",
+        woodDark: "#6e6a64",
+        warm: "#fff1cb"
+      };
+
       const definitions = {
         restaurant: {
           title: "Restaurant Lindenraum",
           category: "Restaurant / Konzept",
           points: [
-            {
-              name: "Gastraum",
-              pos: [0, 1.65, 3.7],
-              yaw: 0
-            },
-            {
-              name: "Bar",
-              pos: [3.4, 1.65, 0.5],
-              yaw: -0.55
-            },
-            {
-              name: "Fensterplätze",
-              pos: [-3.7, 1.65, -1.3],
-              yaw: 1.0
-            }
+            { name: "Gastraum", pos: [0, 1.65, 3.7], yaw: 0 },
+            { name: "Bar", pos: [3.4, 1.65, 0.5], yaw: -0.55 },
+            { name: "Fensterplätze", pos: [-3.7, 1.65, -1.3], yaw: 1.0 }
           ],
           info: [
-            {
-              pos: [3.0, 2.0, -3.9],
-              title: "Die Bar",
-              text:
-                "Ein möglicher Informationspunkt für Ihre Bar: " +
-                "Hier könnten Sie das Getränkekonzept, " +
-                "besondere Angebote oder Ihre Cocktailkarte vorstellen."
-            },
-            {
-              pos: [-3.8, 1.8, -3.0],
-              title: "Platz für besondere Abende",
-              text:
-                "In einem echten Kundenrundgang könnten hier " +
-                "Informationen zu Gruppenreservierungen, " +
-                "Feiern oder besonderen Sitzbereichen stehen."
-            }
+            { pos: [3.0, 2.0, -3.9], title: "Die Bar", text: "Ein möglicher Informationspunkt für Ihre Bar: Hier könnten Sie das Getränkekonzept, besondere Angebote oder Ihre Cocktailkarte vorstellen." },
+            { pos: [-3.8, 1.8, -3.0], title: "Platz für besondere Abende", text: "In einem echten Kundenrundgang könnten hier Informationen zu Gruppenreservierungen, Feiern oder besonderen Sitzbereichen stehen." }
           ]
         },
-
         apartment: {
           title: "Apartment Morgenlicht",
           category: "Ferienwohnung / Konzept",
           points: [
-            {
-              name: "Wohnen",
-              pos: [0, 1.65, 3.8],
-              yaw: 0
-            },
-            {
-              name: "Essen",
-              pos: [-3.4, 1.65, -0.7],
-              yaw: 0.5
-            },
-            {
-              name: "Schlafen",
-              pos: [3.2, 1.65, -1.0],
-              yaw: -0.2
-            }
+            { name: "Wohnen", pos: [0, 1.65, 3.8], yaw: 0 },
+            { name: "Essen", pos: [-3.4, 1.65, -0.7], yaw: 0.5 },
+            { name: "Schlafen", pos: [3.2, 1.65, -1.0], yaw: -0.2 }
           ],
           info: [
-            {
-              pos: [3.35, 1.7, -3.7],
-              title: "Ihr Rückzugsort",
-              text:
-                "Hier lassen sich später echte Angaben zur " +
-                "Bettausstattung, Verdunkelung oder " +
-                "Aufteilung des Schlafbereichs ergänzen."
-            },
-            {
-              pos: [-4.6, 1.9, -4.0],
-              title: "Alles auf einen Blick",
-              text:
-                "Infopunkte können die tatsächliche Ausstattung " +
-                "Ihrer Ferienwohnung erläutern – zum Beispiel " +
-                "Küche, Kaffeemaschine oder Kochmöglichkeiten."
-            }
+            { pos: [3.35, 1.7, -3.7], title: "Ihr Rückzugsort", text: "Hier lassen sich später echte Angaben zur Bettausstattung, Verdunkelung oder Aufteilung des Schlafbereichs ergänzen." },
+            { pos: [-4.6, 1.9, -4.0], title: "Alles auf einen Blick", text: "Infopunkte können die tatsächliche Ausstattung Ihrer Ferienwohnung erläutern – zum Beispiel Küche, Kaffeemaschine oder Kochmöglichkeiten." }
           ]
         },
-
         studio: {
           title: "Studio Balance",
           category: "Bewegung & Wohlbefinden / Konzept",
           points: [
-            {
-              name: "Empfang",
-              pos: [0, 1.65, 3.9],
-              yaw: 0
-            },
-            {
-              name: "Trainingsfläche",
-              pos: [-2.8, 1.65, 0.0],
-              yaw: 0.2
-            },
-            {
-              name: "Ruhebereich",
-              pos: [3.7, 1.65, -1.3],
-              yaw: -0.4
-            }
+            { name: "Empfang", pos: [0, 1.65, 3.9], yaw: 0 },
+            { name: "Trainingsfläche", pos: [-2.8, 1.65, 0.0], yaw: 0.2 },
+            { name: "Ruhebereich", pos: [3.7, 1.65, -1.3], yaw: -0.4 }
           ],
           info: [
-            {
-              pos: [-2.8, 1.3, -3.4],
-              title: "Raum für Bewegung",
-              text:
-                "Hier könnten Sie Ihr tatsächliches Kursangebot, " +
-                "Trainingskonzept oder Informationen zur " +
-                "ersten Probestunde hinterlegen."
-            },
-            {
-              pos: [4.0, 1.6, -3.9],
-              title: "Ankommen und durchatmen",
-              text:
-                "Zeigen Sie neuen Gästen, wie der Besuch abläuft. " +
-                "Dieser Punkt eignet sich beispielsweise für " +
-                "Hinweise zur Vorbereitung auf den ersten Termin."
-            }
+            { pos: [-2.8, 1.3, -3.4], title: "Raum für Bewegung", text: "Hier könnten Sie Ihr tatsächliches Kursangebot, Trainingskonzept oder Informationen zur ersten Probestunde hinterlegen." },
+            { pos: [4.0, 1.6, -3.9], title: "Ankommen und durchatmen", text: "Zeigen Sie neuen Gästen, wie der Besuch abläuft. Dieser Punkt eignet sich beispielsweise für Hinweise zur Vorbereitung auf den ersten Termin." }
           ]
         }
       };
@@ -1095,49 +353,31 @@ body.embedded .viewer:fullscreen {
 
       function material(color, options = {}) {
         const key = JSON.stringify([color, options]);
-
         if (!materialCache.has(key)) {
           materialCache.set(
             key,
-            new THREE.MeshStandardMaterial({
-              color,
-              roughness: 0.85,
-              ...options
-            })
+            new THREE.MeshStandardMaterial({ color, roughness: 0.85, ...options })
           );
         }
-
         return materialCache.get(key);
       }
 
       function box(w, h, d, x, y, z, color, options = {}) {
-        const mesh = new THREE.Mesh(
-          new THREE.BoxGeometry(w, h, d),
-          material(color, options)
-        );
-
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), material(color, options));
         mesh.position.set(x, y, z);
         scene.add(mesh);
         return mesh;
       }
 
       function cylinder(rt, rb, h, x, y, z, color) {
-        const mesh = new THREE.Mesh(
-          new THREE.CylinderGeometry(rt, rb, h, 28),
-          material(color)
-        );
-
+        const mesh = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, 28), material(color));
         mesh.position.set(x, y, z);
         scene.add(mesh);
         return mesh;
       }
 
       function sphere(x, y, z, sx, sy, sz, color) {
-        const mesh = new THREE.Mesh(
-          new THREE.SphereGeometry(1, 18, 12),
-          material(color)
-        );
-
+        const mesh = new THREE.Mesh(new THREE.SphereGeometry(1, 18, 12), material(color));
         mesh.position.set(x, y, z);
         mesh.scale.set(sx, sy, sz);
         scene.add(mesh);
@@ -1145,215 +385,132 @@ body.embedded .viewer:fullscreen {
       }
 
       function plant(x, z, size = 1) {
-        cylinder(
-          0.23 * size,
-          0.17 * size,
-          0.45 * size,
-          x,
-          0.225 * size,
-          z,
-          "#bda588"
-        );
-
-        cylinder(
-          0.025,
-          0.035,
-          0.9 * size,
-          x,
-          0.85 * size,
-          z,
-          "#7d7552"
-        );
+        cylinder(0.23 * size, 0.17 * size, 0.45 * size, x, 0.225 * size, z, P.silver);
+        cylinder(0.025, 0.035, 0.9 * size, x, 0.85 * size, z, P.slate);
 
         for (let i = 0; i < 7; i++) {
           const angle = i * 2.4;
-
           const leaf = sphere(
             x + Math.cos(angle) * 0.22 * size,
             (0.8 + i * 0.075) * size,
             z + Math.sin(angle) * 0.22 * size,
-            0.16 * size,
-            0.36 * size,
-            0.08 * size,
-            i % 2 ? "#748664" : "#8d9d72"
+            0.16 * size, 0.36 * size, 0.08 * size,
+            i % 2 ? P.slate : P.steel
           );
-
           leaf.rotation.z = Math.cos(angle) * 0.65;
           leaf.rotation.x = Math.sin(angle) * 0.5;
         }
       }
 
       function art(x, z, color, width = 1.5) {
-        box(width, 1.5, 0.055, x, 2.1, z, "#a58e6a");
-        box(width - 0.12, 1.38, 0.065, x, 2.1, z + 0.015, "#eee8db");
-
-        const piece = sphere(
-          x,
-          2.1,
-          z + 0.06,
-          width * 0.26,
-          0.48,
-          0.015,
-          color
-        );
-
+        box(width, 1.5, 0.055, x, 2.1, z, P.navy);
+        box(width - 0.12, 1.38, 0.065, x, 2.1, z + 0.015, P.white);
+        const piece = sphere(x, 2.1, z + 0.06, width * 0.26, 0.48, 0.015, color);
         piece.rotation.z = -0.3;
       }
 
       function pendant(x, z) {
-        cylinder(0.015, 0.015, 0.65, x, 3.27, z, "#4e5849");
+        cylinder(0.015, 0.015, 0.65, x, 3.27, z, P.navy);
+        cylinder(0.12, 0.4, 0.2, x, 2.87, z, P.navy2);
+        cylinder(0.29, 0.29, 0.018, x, 2.76, z, P.warm);
 
-        cylinder(
-          0.12, 0.4, 0.2,
-          x, 2.87, z,
-          "#d6c5a3"
-        );
-
-        cylinder(
-          0.29, 0.29, 0.018,
-          x, 2.76, z,
-          "#fff1cb"
-        );
-
-        const light = new THREE.PointLight("#ffe6b3", 8, 6, 2);
+        const light = new THREE.PointLight("#ffe9c2", 8, 6, 2);
         light.position.set(x, 2.6, z);
         scene.add(light);
       }
 
       function table(x, z) {
-        cylinder(0.82, 0.82, 0.1, x, 0.85, z, "#a7845f");
-        cylinder(0.08, 0.1, 0.78, x, 0.39, z, "#5f6452");
-        cylinder(0.38, 0.38, 0.045, x, 0.025, z, "#5f6452");
-
-        cylinder(0.09, 0.07, 0.18, x, 0.98, z, "#e7ddc7");
-        sphere(x, 1.14, z, 0.14, 0.16, 0.12, "#879567");
+        cylinder(0.82, 0.82, 0.1, x, 0.85, z, P.wood);
+        cylinder(0.08, 0.1, 0.78, x, 0.39, z, P.navy2);
+        cylinder(0.38, 0.38, 0.045, x, 0.025, z, P.navy2);
+        cylinder(0.09, 0.07, 0.18, x, 0.98, z, P.white);
+        sphere(x, 1.14, z, 0.14, 0.16, 0.12, P.slate);
 
         [-1, 1].forEach(side => {
-          box(0.5, 0.1, 0.5, x, 0.48, z + side * 1.0, "#758468");
-
-          box(
-            0.5, 0.55, 0.08,
-            x, 0.79, z + side * 1.21,
-            "#758468"
-          );
-
+          box(0.5, 0.1, 0.5, x, 0.48, z + side * 1.0, P.navy3);
+          box(0.5, 0.55, 0.08, x, 0.79, z + side * 1.21, P.navy3);
           [-0.18, 0.18].forEach(dx => {
             [-0.17, 0.17].forEach(dz => {
-              box(
-                0.045, 0.45, 0.045,
-                x + dx,
-                0.225,
-                z + side * 1.0 + dz,
-                "#665e4e"
-              );
+              box(0.045, 0.45, 0.045, x + dx, 0.225, z + side * 1.0 + dz, P.navy);
             });
           });
         });
       }
 
-      function sofa(x, z, color = "#c7c6af") {
+      function sofa(x, z, color = P.silver) {
         box(2.9, 0.35, 1.0, x, 0.42, z, color);
         box(2.9, 0.65, 0.2, x, 0.88, z - 0.46, color);
-
-        [-1, 1].forEach(side => {
-          box(0.18, 0.5, 1.0, x + side * 1.36, 0.7, z, color);
-        });
-
-        [-0.7, 0, 0.7].forEach(dx => {
-          box(0.65, 0.13, 0.76, x + dx, 0.65, z + 0.05, "#e1ddc9");
-        });
-
-        box(0.43, 0.4, 0.16, x - 0.8, 0.95, z - 0.23, "#899772");
-        box(0.43, 0.4, 0.16, x + 0.8, 0.95, z - 0.23, "#b9967a");
+        [-1, 1].forEach(side => box(0.18, 0.5, 1.0, x + side * 1.36, 0.7, z, color));
+        [-0.7, 0, 0.7].forEach(dx => box(0.65, 0.13, 0.76, x + dx, 0.65, z + 0.05, P.white));
+        box(0.43, 0.4, 0.16, x - 0.8, 0.95, z - 0.23, P.navy3);
+        box(0.43, 0.4, 0.16, x + 0.8, 0.95, z - 0.23, P.steel);
       }
 
-      function roomBase(type) {
+      function roomBase() {
         scene = new THREE.Scene();
-        scene.background = new THREE.Color("#d6ddce");
-        scene.fog = new THREE.Fog("#dfdfd1", 19, 42);
+        scene.background = new THREE.Color("#dfe3ea");
+        scene.fog = new THREE.Fog("#e4e7ed", 19, 42);
 
-        const floorColor =
-          type === "studio" ? "#c1ac88" : "#b49b78";
+        box(12, 0.12, 10, 0, -0.06, 0, P.floor);
+        box(12, 0.1, 10, 0, 3.85, 0, P.white);
 
-        box(12, 0.12, 10, 0, -0.06, 0, floorColor);
-        box(12, 0.1, 10, 0, 3.85, 0, "#eee9dc");
+        box(12, 3.8, 0.12, 0, 1.9, -5, P.mist);
+        box(0.12, 3.8, 10, -6, 1.9, 0, "#eceff3");
+        box(0.12, 3.8, 10, 6, 1.9, 0, "#dde2ea");
+        box(12, 3.8, 0.12, 0, 1.9, 5, "#eceff3");
 
-        // Rückwand und Seitenwände.
-        box(12, 3.8, 0.12, 0, 1.9, -5, "#e4dfcf");
-        box(0.12, 3.8, 10, -6, 1.9, 0, "#e9e5d8");
-        box(0.12, 3.8, 10, 6, 1.9, 0, "#e1dfd1");
-        box(12, 3.8, 0.12, 0, 1.9, 5, "#e9e5d8");
+        box(12, 0.13, 0.04, 0, 0.065, -4.92, P.grey);
+        box(12, 0.13, 0.04, 0, 0.065, 4.92, P.grey);
+        box(0.04, 0.13, 10, -5.92, 0.065, 0, P.grey);
+        box(0.04, 0.13, 10, 5.92, 0.065, 0, P.grey);
 
-        // Sockelleisten.
-        box(12, 0.13, 0.04, 0, 0.065, -4.92, "#a5987e");
-        box(12, 0.13, 0.04, 0, 0.065, 4.92, "#a5987e");
-        box(0.04, 0.13, 10, -5.92, 0.065, 0, "#a5987e");
-        box(0.04, 0.13, 10, 5.92, 0.065, 0, "#a5987e");
-
-        // Dielenfugen.
         for (let x = -5.7; x < 6; x += 0.48) {
-          box(0.012, 0.003, 10, x, 0.003, 0, "#99896d");
+          box(0.012, 0.003, 10, x, 0.003, 0, P.floorLine);
         }
 
-        // Helle, stilisierte Fenster auf der linken Wand.
         [-2.8, 1.3].forEach(z => {
-          box(0.07, 2.15, 2.55, -5.91, 2.0, z, "#a4b69d", {
-            emissive: "#b6c9ad",
-            emissiveIntensity: 0.4
-          });
-
-          box(0.14, 2.3, 0.08, -5.85, 2.0, z - 1.28, "#f3efe3");
-          box(0.14, 2.3, 0.08, -5.85, 2.0, z + 1.28, "#f3efe3");
-          box(0.14, 0.08, 2.65, -5.85, 3.13, z, "#f3efe3");
-          box(0.14, 0.08, 2.65, -5.85, 0.88, z, "#f3efe3");
-          box(0.15, 2.2, 0.055, -5.83, 2.0, z, "#f3efe3");
+          box(0.07, 2.15, 2.55, -5.91, 2.0, z, "#9db3d3", { emissive: "#bcd0ec", emissiveIntensity: 0.45 });
+          box(0.14, 2.3, 0.08, -5.85, 2.0, z - 1.28, P.white);
+          box(0.14, 2.3, 0.08, -5.85, 2.0, z + 1.28, P.white);
+          box(0.14, 0.08, 2.65, -5.85, 3.13, z, P.white);
+          box(0.14, 0.08, 2.65, -5.85, 0.88, z, P.white);
+          box(0.15, 2.2, 0.055, -5.83, 2.0, z, P.white);
         });
 
-        scene.add(new THREE.HemisphereLight("#fff4dd", "#86765e", 2.4));
-        scene.add(new THREE.AmbientLight("#fff4e4", 0.65));
+        scene.add(new THREE.HemisphereLight("#f4f7ff", "#8a8f99", 2.4));
+        scene.add(new THREE.AmbientLight("#f6f8ff", 0.65));
 
-        const daylight = new THREE.DirectionalLight("#fff2d5", 2.5);
+        const daylight = new THREE.DirectionalLight("#fff6e6", 2.5);
         daylight.position.set(-4, 3.5, 2);
         scene.add(daylight);
       }
 
       function buildRestaurant() {
-        roomBase("restaurant");
+        roomBase();
 
-        // Akzentwand und Holzlamellen.
-        box(5.0, 2.8, 0.08, 3.1, 1.5, -4.9, "#68765e");
-
+        box(5.0, 2.8, 0.08, 3.1, 1.5, -4.9, P.navy2);
         for (let x = 0.8; x <= 5.5; x += 0.24) {
-          box(0.035, 2.7, 0.07, x, 1.5, -4.8, "#8e9b78");
+          box(0.035, 2.7, 0.07, x, 1.5, -4.8, P.navy3);
         }
 
-        // Bar.
-        box(4.4, 1.1, 1.0, 3.0, 0.55, -3.2, "#968264");
-        box(4.6, 0.12, 1.15, 3.0, 1.15, -3.2, "#ded9c5");
+        box(4.4, 1.1, 1.0, 3.0, 0.55, -3.2, P.navy);
+        box(4.6, 0.12, 1.15, 3.0, 1.15, -3.2, P.mist);
 
         for (let x = 1.1; x < 5; x += 0.18) {
-          box(0.04, 0.93, 0.035, x, 0.53, -2.68, "#756c53");
+          box(0.04, 0.93, 0.035, x, 0.53, -2.68, P.navy2);
         }
 
         [1.6, 3.0, 4.4].forEach(x => {
-          cylinder(0.26, 0.26, 0.09, x, 0.77, -1.95, "#766c52");
-          cylinder(0.035, 0.035, 0.73, x, 0.365, -1.95, "#4c594c");
-          cylinder(0.23, 0.23, 0.035, x, 0.02, -1.95, "#4c594c");
+          cylinder(0.26, 0.26, 0.09, x, 0.77, -1.95, P.wood);
+          cylinder(0.035, 0.035, 0.73, x, 0.365, -1.95, P.navy);
+          cylinder(0.23, 0.23, 0.035, x, 0.02, -1.95, P.navy);
           pendant(x, -3.15);
         });
 
-        // Rückregal und stilisierte Flaschen.
         [1.75, 2.45].forEach(y => {
-          box(4.0, 0.075, 0.28, 3.0, y, -4.65, "#a68c65");
-
+          box(4.0, 0.075, 0.28, 3.0, y, -4.65, P.silver);
           for (let i = 0; i < 8; i++) {
-            const x = 1.5 + i * 0.43;
-
-            cylinder(
-              0.055, 0.06, 0.25,
-              x, y + 0.16, -4.62,
-              i % 2 ? "#6b7750" : "#b89d6c"
-            );
+            cylinder(0.055, 0.06, 0.25, 1.5 + i * 0.43, y + 0.16, -4.62, i % 2 ? P.steel : P.white);
           }
         });
 
@@ -1361,104 +518,79 @@ body.embedded .viewer:fullscreen {
         table(-3.4, 1.0);
         table(0.0, -1.0);
 
-        art(-2.0, -4.9, "#9ba680", 1.65);
+        art(-2.0, -4.9, P.navy3, 1.65);
         plant(5.1, 3.7, 1.35);
         plant(-5.0, -4.2, 1.15);
       }
 
       function buildApartment() {
-        roomBase("apartment");
+        roomBase();
 
-        // Teppich, Sofa und Couchtisch.
-        box(4.5, 0.018, 3.5, -0.7, 0.016, 0.1, "#e1ddc9");
+        box(4.5, 0.018, 3.5, -0.7, 0.016, 0.1, P.mist);
         sofa(-0.8, -1.4);
 
-        cylinder(0.75, 0.75, 0.08, -0.8, 0.5, 0.65, "#a78b67");
-        cylinder(0.11, 0.16, 0.48, -0.8, 0.24, 0.65, "#8e7758");
-        box(0.5, 0.035, 0.34, -1.0, 0.565, 0.6, "#7a8c72");
+        cylinder(0.75, 0.75, 0.08, -0.8, 0.5, 0.65, P.wood);
+        cylinder(0.11, 0.16, 0.48, -0.8, 0.24, 0.65, P.woodDark);
+        box(0.5, 0.035, 0.34, -1.0, 0.565, 0.6, P.navy3);
 
-        // Küchenzeile.
-        box(3.7, 0.9, 0.7, -3.5, 0.45, -4.45, "#c0c6b1");
-        box(3.8, 0.07, 0.8, -3.5, 0.94, -4.45, "#e8e2d3");
+        box(3.7, 0.9, 0.7, -3.5, 0.45, -4.45, P.navy2);
+        box(3.8, 0.07, 0.8, -3.5, 0.94, -4.45, P.mist);
 
         for (let x = -5.0; x < -1.7; x += 0.65) {
-          box(0.015, 0.73, 0.02, x, 0.47, -4.085, "#8e9a85");
+          box(0.015, 0.73, 0.02, x, 0.47, -4.085, P.navy3);
         }
 
-        box(1.5, 0.045, 0.5, -3.8, 1.0, -4.45, "#657066");
-        box(0.7, 0.08, 0.45, -2.2, 1.02, -4.45, "#aaa995");
+        box(1.5, 0.045, 0.5, -3.8, 1.0, -4.45, P.steel);
+        box(0.7, 0.08, 0.45, -2.2, 1.02, -4.45, P.grey);
 
-        // Essplatz.
         table(-3.7, -1.5);
         pendant(-3.7, -1.5);
 
-        // Schlafzone.
-        box(3.6, 0.018, 3.4, 3.35, 0.02, -2.8, "#ddd5bf");
-        box(2.25, 0.42, 2.7, 3.4, 0.27, -3.2, "#aa9272");
-        box(2.15, 0.23, 2.55, 3.4, 0.59, -3.2, "#f4eddf");
-        box(2.35, 1.1, 0.14, 3.4, 0.77, -4.6, "#a9b095");
-        box(2.12, 0.055, 1.25, 3.4, 0.74, -2.65, "#a4ad90");
+        box(3.6, 0.018, 3.4, 3.35, 0.02, -2.8, P.mist);
+        box(2.25, 0.42, 2.7, 3.4, 0.27, -3.2, P.wood);
+        box(2.15, 0.23, 2.55, 3.4, 0.59, -3.2, P.white);
+        box(2.35, 1.1, 0.14, 3.4, 0.77, -4.6, P.navy2);
+        box(2.12, 0.055, 1.25, 3.4, 0.74, -2.65, P.slate);
 
-        [2.85, 3.95].forEach(x => {
-          box(0.8, 0.17, 0.48, x, 0.81, -4.0, "#fff9ed");
-        });
+        [2.85, 3.95].forEach(x => box(0.8, 0.17, 0.48, x, 0.81, -4.0, "#ffffff"));
 
-        box(0.6, 0.55, 0.6, 5.0, 0.275, -4.0, "#b69d78");
-        cylinder(0.19, 0.25, 0.27, 5.0, 1.03, -4.0, "#e5dbc2");
-        cylinder(0.025, 0.025, 0.35, 5.0, 0.74, -4.0, "#6c735f");
+        box(0.6, 0.55, 0.6, 5.0, 0.275, -4.0, P.wood);
+        cylinder(0.19, 0.25, 0.27, 5.0, 1.03, -4.0, P.mist);
+        cylinder(0.025, 0.025, 0.35, 5.0, 0.74, -4.0, P.slate);
 
-        art(-0.2, -4.9, "#9ba984", 1.55);
+        art(-0.2, -4.9, P.slate, 1.55);
         plant(5.2, 3.5, 1.5);
         plant(-5.0, 3.5, 1.2);
       }
 
       function buildStudio() {
-        roomBase("studio");
+        roomBase();
 
-        // Empfang an der rechten Vorderseite.
-        box(2.35, 1.0, 0.8, 3.8, 0.5, 2.25, "#c1b395");
-        box(2.5, 0.08, 0.92, 3.8, 1.04, 2.25, "#e7e2d4");
-        box(0.5, 0.3, 0.04, 3.8, 1.25, 2.15, "#5d6d5d");
+        box(2.35, 1.0, 0.8, 3.8, 0.5, 2.25, P.navy2);
+        box(2.5, 0.08, 0.92, 3.8, 1.04, 2.25, P.mist);
+        box(0.5, 0.3, 0.04, 3.8, 1.25, 2.15, P.navy);
 
-        // Spiegelwand.
-        box(5.5, 2.15, 0.055, -2.0, 1.65, -4.9, "#a2b5ac", {
-          metalness: 0.2,
-          roughness: 0.3
-        });
+        box(5.5, 2.15, 0.055, -2.0, 1.65, -4.9, "#b4c3d9", { metalness: 0.2, roughness: 0.3 });
+        box(5.7, 0.08, 0.08, -2.0, 0.55, -4.82, P.navy);
+        box(5.7, 0.08, 0.08, -2.0, 2.76, -4.82, P.navy);
 
-        box(5.7, 0.08, 0.08, -2.0, 0.55, -4.82, "#9b8d70");
-        box(5.7, 0.08, 0.08, -2.0, 2.76, -4.82, "#9b8d70");
-
-        // Matten und Trainingszubehör.
         [-3.6, -1.4, 0.8].forEach((x, i) => {
-          box(
-            0.92, 0.035, 2.05,
-            x, 0.025, -1.9,
-            i % 2 ? "#b29b81" : "#809577"
-          );
+          box(0.92, 0.035, 2.05, x, 0.025, -1.9, i % 2 ? P.steel : P.navy3);
+          box(0.28, 0.14, 0.17, x + 0.2, 0.11, -2.65, P.silver);
+          box(0.28, 0.14, 0.17, x - 0.2, 0.11, -2.65, P.silver);
 
-          box(0.28, 0.14, 0.17, x + 0.2, 0.11, -2.65, "#c7b58f");
-          box(0.28, 0.14, 0.17, x - 0.2, 0.11, -2.65, "#c7b58f");
-
-          const bolster = cylinder(
-            0.16, 0.16, 0.58,
-            x, 0.2, -0.5,
-            "#cbc6ad"
-          );
-
+          const bolster = cylinder(0.16, 0.16, 0.58, x, 0.2, -0.5, P.white);
           bolster.rotation.z = Math.PI / 2;
         });
 
-        // Ruhebereich.
-        box(3.0, 0.02, 3.0, 3.9, 0.015, -2.7, "#dedbc6");
-        sofa(3.8, -3.7, "#b5c0a5");
+        box(3.0, 0.02, 3.0, 3.9, 0.015, -2.7, P.mist);
+        sofa(3.8, -3.7, P.grey);
 
-        cylinder(0.5, 0.5, 0.07, 3.8, 0.46, -2.2, "#b59974");
-        cylinder(0.06, 0.08, 0.44, 3.8, 0.22, -2.2, "#8b7b5e");
+        cylinder(0.5, 0.5, 0.07, 3.8, 0.46, -2.2, P.wood);
+        cylinder(0.06, 0.08, 0.44, 3.8, 0.22, -2.2, P.woodDark);
 
-        // Niedriges Regal.
-        box(2.4, 0.65, 0.5, -3.8, 0.325, 3.7, "#ad9877");
-        box(2.25, 0.3, 0.42, -3.8, 0.4, 3.4, "#d1c4a9");
+        box(2.4, 0.65, 0.5, -3.8, 0.325, 3.7, P.navy2);
+        box(2.25, 0.3, 0.42, -3.8, 0.4, 3.4, P.silver);
 
         plant(5.2, -4.25, 1.3);
         plant(-5.0, 3.3, 1.4);
@@ -1466,19 +598,12 @@ body.embedded .viewer:fullscreen {
         pendant(-1.6, 0.6);
       }
 
-      const builders = {
-        restaurant: buildRestaurant,
-        apartment: buildApartment,
-        studio: buildStudio
-      };
+      const builders = { restaurant: buildRestaurant, apartment: buildApartment, studio: buildStudio };
 
       function disposeScene() {
         if (!scene) return;
-
         scene.traverse(object => {
-          if (object.geometry) {
-            object.geometry.dispose();
-          }
+          if (object.geometry) object.geometry.dispose();
         });
       }
 
@@ -1488,17 +613,12 @@ body.embedded .viewer:fullscreen {
 
         activePoint = index;
         targetPosition.set(...point.pos);
-
-        // Sofortiger Wechsel vermeidet Fahrten durch Möbel.
         camera.position.copy(targetPosition);
         yaw = point.yaw;
         pitch = 0;
 
         document.getElementById("scene-title").textContent =
-          "Perspektive " +
-          String(index + 1).padStart(2, "0") +
-          " · " +
-          point.name;
+          "Perspektive " + String(index + 1).padStart(2, "0") + " · " + point.name;
 
         sceneMenu.querySelectorAll("button").forEach((button, i) => {
           const active = i === index;
@@ -1507,10 +627,7 @@ body.embedded .viewer:fullscreen {
         });
 
         createHotspots();
-
-        if (!instant) {
-          help.classList.add("hidden");
-        }
+        if (!instant) help.classList.add("hidden");
       }
 
       function createHotspots() {
@@ -1521,24 +638,11 @@ body.embedded .viewer:fullscreen {
 
         definition.points.forEach((point, index) => {
           if (index === activePoint) return;
-
-          addHotspot(
-            [point.pos[0], 0.13, point.pos[2]],
-            point.name,
-            "↗",
-            false,
-            () => setPoint(index)
-          );
+          addHotspot([point.pos[0], 0.13, point.pos[2]], point.name, "↗", false, () => setPoint(index));
         });
 
         definition.info.forEach(info => {
-          addHotspot(
-            info.pos,
-            info.title,
-            "i",
-            true,
-            () => openInfo(info)
-          );
+          addHotspot(info.pos, info.title, "i", true, () => openInfo(info));
         });
       }
 
@@ -1546,10 +650,7 @@ body.embedded .viewer:fullscreen {
         const button = document.createElement("button");
         button.type = "button";
         button.className = "hotspot" + (isInfo ? " info" : "");
-        button.setAttribute(
-          "aria-label",
-          (isInfo ? "Information: " : "Wechseln zu: ") + label
-        );
+        button.setAttribute("aria-label", (isInfo ? "Information: " : "Wechseln zu: ") + label);
 
         const icon = document.createElement("span");
         icon.textContent = symbol;
@@ -1561,17 +662,11 @@ body.embedded .viewer:fullscreen {
         caption.textContent = label;
         button.appendChild(caption);
 
-        button.addEventListener("pointerdown", event => {
-          event.stopPropagation();
-        });
-
+        button.addEventListener("pointerdown", event => event.stopPropagation());
         button.addEventListener("click", handler);
         hotspotLayer.appendChild(button);
 
-        hotspotItems.push({
-          element: button,
-          position: new THREE.Vector3(...pos)
-        });
+        hotspotItems.push({ element: button, position: new THREE.Vector3(...pos) });
       }
 
       function selectProperty(key) {
@@ -1584,12 +679,8 @@ body.embedded .viewer:fullscreen {
         builders[key]();
 
         const definition = definitions[key];
-
-        document.getElementById("category").textContent =
-          definition.category;
-
-        document.getElementById("property-title").textContent =
-          definition.title;
+        document.getElementById("category").textContent = definition.category;
+        document.getElementById("property-title").textContent = definition.title;
 
         document.querySelectorAll("[data-property]").forEach(button => {
           const active = button.dataset.property === key;
@@ -1610,13 +701,11 @@ body.embedded .viewer:fullscreen {
           button.appendChild(number);
           button.appendChild(document.createTextNode(point.name));
           button.addEventListener("click", () => setPoint(index));
-
           sceneMenu.appendChild(button);
         });
 
         camera.fov = 70;
         camera.updateProjectionMatrix();
-
         setPoint(0, true);
       }
 
@@ -1631,19 +720,13 @@ body.embedded .viewer:fullscreen {
         document.getElementById("info-title").textContent = info.title;
         document.getElementById("info-text").textContent = info.text;
 
-        if (document.fullscreenElement === viewer) {
-          viewer.appendChild(dialog);
-        } else {
-          document.body.appendChild(dialog);
-        }
+        if (document.fullscreenElement === viewer) viewer.appendChild(dialog);
+        else document.body.appendChild(dialog);
 
         dialog.showModal();
       }
 
-      document.getElementById("close-info").addEventListener(
-        "click",
-        () => dialog.close()
-      );
+      document.getElementById("close-info").addEventListener("click", () => dialog.close());
 
       dialog.addEventListener("close", () => {
         autoRotate = resumeRotation;
@@ -1652,84 +735,55 @@ body.embedded .viewer:fullscreen {
 
       dialog.addEventListener("click", event => {
         const rect = dialog.getBoundingClientRect();
-
-        if (
-          event.clientX < rect.left ||
-          event.clientX > rect.right ||
-          event.clientY < rect.top ||
-          event.clientY > rect.bottom
-        ) {
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) {
           dialog.close();
         }
       });
 
       document.querySelectorAll("[data-property]").forEach(button => {
-        button.addEventListener("click", () => {
-          selectProperty(button.dataset.property);
-        });
+        button.addEventListener("click", () => selectProperty(button.dataset.property));
       });
 
       const canvas = renderer.domElement;
 
       canvas.addEventListener("pointerdown", event => {
         if (event.pointerType === "mouse" && event.button !== 0) return;
-
         dragging = true;
         lastX = event.clientX;
         lastY = event.clientY;
-
         autoRotate = false;
         updateRotateButton();
         help.classList.add("hidden");
-
         canvas.setPointerCapture(event.pointerId);
       });
 
       canvas.addEventListener("pointermove", event => {
         if (!dragging) return;
-
         yaw -= (event.clientX - lastX) * 0.004;
         pitch += (event.clientY - lastY) * 0.0035;
-
         pitch = THREE.MathUtils.clamp(pitch, -1.1, 1.1);
-
         lastX = event.clientX;
         lastY = event.clientY;
       });
 
-      function stopDragging() {
-        dragging = false;
-      }
-
+      function stopDragging() { dragging = false; }
       canvas.addEventListener("pointerup", stopDragging);
       canvas.addEventListener("pointercancel", stopDragging);
       canvas.addEventListener("lostpointercapture", stopDragging);
 
       function zoom(delta) {
-        camera.fov = THREE.MathUtils.clamp(
-          camera.fov + delta,
-          38,
-          90
-        );
-
+        camera.fov = THREE.MathUtils.clamp(camera.fov + delta, 38, 90);
         camera.updateProjectionMatrix();
       }
 
       canvas.addEventListener("wheel", event => {
-        // Scrollen der Website bleibt möglich.
-        // Strg + Mausrad steuert den Zoom im Viewer.
         if (!event.ctrlKey) return;
-
         event.preventDefault();
         zoom(event.deltaY * 0.025);
       }, { passive: false });
 
       canvas.addEventListener("keydown", event => {
-        const keys = [
-          "ArrowLeft", "ArrowRight",
-          "ArrowUp", "ArrowDown", "+", "-", "="
-        ];
-
+        const keys = ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", "+", "-", "="];
         if (!keys.includes(event.key)) return;
 
         event.preventDefault();
@@ -1746,15 +800,8 @@ body.embedded .viewer:fullscreen {
         pitch = THREE.MathUtils.clamp(pitch, -1.1, 1.1);
       });
 
-      document.getElementById("zoom-in").addEventListener(
-        "click",
-        () => zoom(-6)
-      );
-
-      document.getElementById("zoom-out").addEventListener(
-        "click",
-        () => zoom(6)
-      );
+      document.getElementById("zoom-in").addEventListener("click", () => zoom(-6));
+      document.getElementById("zoom-out").addEventListener("click", () => zoom(6));
 
       function updateRotateButton() {
         const button = document.getElementById("rotate");
@@ -1770,7 +817,6 @@ body.embedded .viewer:fullscreen {
       document.getElementById("reset").addEventListener("click", () => {
         autoRotate = false;
         updateRotateButton();
-
         camera.fov = 70;
         camera.updateProjectionMatrix();
         setPoint(activePoint);
@@ -1780,37 +826,27 @@ body.embedded .viewer:fullscreen {
 
       if (!viewer.requestFullscreen) {
         fullscreenButton.disabled = true;
-        fullscreenButton.title =
-          "Vollbild wird von diesem Browser nicht unterstützt";
+        fullscreenButton.title = "Vollbild wird von diesem Browser nicht unterstützt";
       }
 
       fullscreenButton.addEventListener("click", async () => {
         try {
-          if (document.fullscreenElement) {
-            await document.exitFullscreen();
-          } else {
-            await viewer.requestFullscreen();
-          }
+          if (document.fullscreenElement) await document.exitFullscreen();
+          else await viewer.requestFullscreen();
         } catch (error) {
-          fullscreenButton.title =
-            "Vollbild konnte nicht aktiviert werden";
+          fullscreenButton.title = "Vollbild konnte nicht aktiviert werden";
           console.warn(error);
         }
       });
 
       document.addEventListener("fullscreenchange", () => {
         const active = document.fullscreenElement === viewer;
-
-        fullscreenButton.setAttribute(
-          "aria-label",
-          active ? "Vollbild beenden" : "Vollbild"
-        );
+        fullscreenButton.setAttribute("aria-label", active ? "Vollbild beenden" : "Vollbild");
       });
 
       function resize() {
         const width = stage.clientWidth;
         const height = stage.clientHeight;
-
         renderer.setSize(width, height);
         camera.aspect = width / Math.max(height, 1);
         camera.updateProjectionMatrix();
@@ -1826,15 +862,13 @@ body.embedded .viewer:fullscreen {
 
         hotspotItems.forEach(item => {
           difference.copy(item.position).sub(camera.position);
-
           const inFront = difference.dot(direction) > 0;
 
           projected.copy(item.position).project(camera);
 
           const visible =
             inFront &&
-            projected.z > -1 &&
-            projected.z < 1 &&
+            projected.z > -1 && projected.z < 1 &&
             Math.abs(projected.x) < 0.93 &&
             Math.abs(projected.y) < 0.78;
 
@@ -1844,9 +878,7 @@ body.embedded .viewer:fullscreen {
           if (visible) {
             const x = (projected.x * 0.5 + 0.5) * width;
             const y = (-projected.y * 0.5 + 0.5) * height;
-
-            item.element.style.transform =
-              `translate(${x}px, ${y}px) translate(-50%, -50%)`;
+            item.element.style.transform = `translate(${x}px, ${y}px) translate(-50%, -50%)`;
           }
         });
       }
@@ -1864,7 +896,6 @@ body.embedded .viewer:fullscreen {
         camera.rotation.y = yaw;
         camera.rotation.x = pitch;
         camera.rotation.z = 0;
-
         camera.updateMatrixWorld();
 
         renderer.render(scene, camera);
