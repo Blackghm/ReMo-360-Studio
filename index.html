@@ -5,102 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ReMo 360 | 360°-Rundgänge für Website und Google Maps</title>
   <meta name="description" content="ReMo 360 erstellt virtuelle 360°-Rundgänge für Restaurants, Ferienunterkünfte und Studios – für Ihre Website und Google Maps.">
- <meta name="theme-color" content="#0b1f3a">
-/* ===== Farbwelt: Marineblau, Weiß, Grau ===== */
+  <meta name="theme-color" content="#0b1f3a">
 
-:root {
-  --ink: #0b1f3a;
-  --ink-2: #12305a;
-  --ink-3: #071426;
-  --cool: #eef0f3;
-  --line: #d5d9e0;
-  --muted: #5b6472;
-  --muted-dark: #b8c0cc;
-  --accent: #0b1f3a;
-  --accent-hover: #e3e7ee;
-}
-
-:focus-visible { outline-color: #8fa8d0; }
-
-/* Hervorhebungen */
-em { color: #c9d1de; }
-.eyebrow { color: var(--ink-2); }
-.dark .eyebrow { color: #c9d1de; }
-.logo sup { color: #c9d1de; }
-.hero-points span::before { color: #c9d1de; }
-.nav-links > a:not(.nav-cta):hover { color: #c9d1de; }
-.legal-btn:hover { color: #c9d1de; }
-.contact-details dt { color: #c9d1de; }
-
-/* Hinweisleiste und Skip-Link */
-.preview-banner { background: #d5d9e0; color: var(--ink); }
-.skip-link { background: #fff; color: var(--ink); }
-
-/* Kopfbereich */
-.header { background: rgba(11, 31, 58, 0.97); border-bottom-color: #1f3a63; }
-.menu-toggle { border-color: #3a5380; }
-.nav-links { border-bottom-color: #1f3a63; }
-.nav-cta { background: #fff; color: var(--ink); }
-.nav-cta:hover { background: #e3e7ee; }
-
-/* Schaltflächen */
-.button-accent { background: #fff; color: var(--ink); }
-.button-accent:hover { background: #e3e7ee; }
-.form-card .button-accent { background: var(--ink); color: #fff; }
-.form-card .button-accent:hover { background: var(--ink-2); }
-
-/* Demo-Bereich */
-.demo-box { border-color: #2a4875; background: var(--ink-2); }
-.demo-start { background: radial-gradient(ellipse at 50% 40%, #1d4075 0%, #0b1f3a 72%); }
-.demo-start .badge { border-color: #c9d1de; color: #c9d1de; }
-
-/* Karten und Nutzen */
-.card-icon { background: var(--ink); color: #fff; }
-.benefit span { color: var(--ink-2); }
-
-/* Ablauf */
-.step { border-top-color: #8fa0ba; }
-.step > span { color: #c9d1de; }
-
-/* Pakete */
-.package-cat { color: var(--ink-2); }
-.package li::before { color: var(--ink-2); }
-.package-tag { background: #d5d9e0; color: var(--ink); border: 1px solid #b8c0cc; }
-.featured .package-cat { color: #c9d1de; }
-.featured li::before { color: #c9d1de; }
-.featured ul { border-color: #2a4875; }
-
-/* FAQ */
-summary::after { color: var(--ink-2); }
-
-/* Kontakt und Formular */
-.contact-details div { border-top-color: #2a4875; }
-input:focus, select:focus, textarea:focus {
-  border-color: var(--ink-2);
-  box-shadow: 0 0 0 3px rgba(18, 48, 90, 0.25);
-}
-.check input { accent-color: var(--ink); }
-.form-status.ok { background: #e4ebf5; color: var(--ink); border: 1px solid #9db3d3; }
-.form-status.err { background: #eceff3; color: var(--ink); border: 1px solid #8a95ad; border-left: 5px solid var(--ink); }
-.form-status.ok::before { content: "✓ "; font-weight: 700; }
-.form-status.err::before { content: "Hinweis: "; font-weight: 700; }
-
-/* Fußbereich und Rechtstexte */
-.footer-bottom { border-top-color: #1f3a63; }
-.legal-warning { background: #eef0f3; border-left-color: var(--ink-2); }
   <style>
     :root {
-      --ink: #0b1324;
-      --ink-2: #141f38;
-      --ink-3: #060b16;
+      --ink: #0b1f3a;
+      --ink-2: #12305a;
+      --ink-3: #071426;
       --white: #ffffff;
-      --cool: #eef1f6;
-      --line: #d3d9e4;
-      --text: #0b1324;
-      --muted: #4a5468;
-      --muted-dark: #b7c0d4;
-      --accent: #ff6b2c;
-      --accent-hover: #ff8650;
+      --cool: #eef0f3;
+      --line: #d5d9e0;
+      --muted: #5b6472;
+      --muted-dark: #b8c0cc;
+      --light: #c9d1de;
       --radius: 8px;
     }
 
@@ -111,7 +28,7 @@ input:focus, select:focus, textarea:focus {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
       background: var(--white);
-      color: var(--text);
+      color: var(--ink);
       line-height: 1.7;
     }
 
@@ -124,23 +41,26 @@ input:focus, select:focus, textarea:focus {
     h1 { font-size: clamp(2.9rem, 6.4vw, 5.6rem); margin-bottom: 26px; }
     h2 { font-size: clamp(2.2rem, 4.2vw, 3.7rem); margin-bottom: 22px; }
     h3 { font-size: 1.25rem; font-weight: 600; line-height: 1.35; }
-    em { font-family: Georgia, serif; font-weight: 400; color: var(--accent); }
+    em { font-family: Georgia, serif; font-weight: 400; color: var(--light); }
 
-    :focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
+    :focus-visible { outline: 3px solid #8fa8d0; outline-offset: 4px; }
 
     .container { width: min(1180px, calc(100% - 64px)); margin-inline: auto; }
     .section { padding-block: 95px; }
+
     .eyebrow {
       margin-bottom: 20px;
       font-size: 0.72rem; font-weight: 700;
       letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--accent);
+      color: var(--ink-2);
     }
     .note { color: var(--muted); font-size: 0.78rem; line-height: 1.8; }
 
     .dark { background: var(--ink); color: var(--white); }
-    .dark .note, .dark .muted { color: var(--muted-dark); }
+    .dark .eyebrow { color: var(--light); }
+    .dark .note { color: var(--muted-dark); }
 
+    /* Schaltflächen */
     .button {
       display: inline-flex; align-items: center; justify-content: center; gap: 18px;
       padding: 15px 24px; border: 2px solid transparent; border-radius: 4px;
@@ -148,8 +68,8 @@ input:focus, select:focus, textarea:focus {
       transition: transform 0.2s, background 0.2s, color 0.2s;
     }
     .button:hover { transform: translateY(-2px); }
-    .button-accent { background: var(--accent); color: var(--ink); }
-    .button-accent:hover { background: var(--accent-hover); }
+    .button-light { background: var(--white); color: var(--ink); }
+    .button-light:hover { background: #e3e7ee; }
     .button-dark { background: var(--ink); color: var(--white); }
     .button-dark:hover { background: var(--ink-2); }
     .button-outline { border-color: var(--ink); color: var(--ink); background: transparent; }
@@ -157,22 +77,20 @@ input:focus, select:focus, textarea:focus {
     .dark .button-outline { border-color: var(--white); color: var(--white); }
     .dark .button-outline:hover { background: var(--white); color: var(--ink); }
 
-    .skip-link { position: absolute; left: 20px; top: -100px; z-index: 100; padding: 12px; background: var(--accent); color: var(--ink); font-weight: 700; }
+    .skip-link { position: absolute; left: 20px; top: -100px; z-index: 100; padding: 12px; background: var(--white); color: var(--ink); font-weight: 700; }
     .skip-link:focus { top: 12px; }
 
-    .preview-banner { padding: 8px 20px; background: var(--accent); color: var(--ink); text-align: center; font-size: 0.74rem; font-weight: 600; }
-
     /* Navigation */
-    .header { position: sticky; top: 0; z-index: 30; background: rgba(11, 19, 36, 0.97); border-bottom: 1px solid #25314d; color: var(--white); }
+    .header { position: sticky; top: 0; z-index: 30; background: rgba(11, 31, 58, 0.97); border-bottom: 1px solid #1f3a63; color: var(--white); }
     .nav { display: flex; align-items: center; justify-content: space-between; height: 80px; gap: 24px; }
     .logo { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.08em; white-space: nowrap; }
     .logo span { font-weight: 300; margin-left: 6px; }
-    .logo sup { color: var(--accent); font-size: 0.6em; }
+    .logo sup { color: var(--light); font-size: 0.6em; }
     .nav-links { display: flex; align-items: center; gap: 26px; font-size: 0.85rem; }
-    .nav-links > a:not(.nav-cta):hover { color: var(--accent); }
-    .nav-cta { padding: 10px 18px; background: var(--accent); color: var(--ink); border-radius: 4px; font-weight: 700; }
-    .nav-cta:hover { background: var(--accent-hover); }
-    .menu-toggle { display: none; width: 44px; height: 44px; padding: 11px; background: transparent; border: 1px solid #3a4768; border-radius: 4px; }
+    .nav-links > a:not(.nav-cta):hover { color: var(--light); }
+    .nav-cta { padding: 10px 18px; background: var(--white); color: var(--ink); border-radius: 4px; font-weight: 700; }
+    .nav-cta:hover { background: #e3e7ee; }
+    .menu-toggle { display: none; width: 44px; height: 44px; padding: 11px; background: transparent; border: 1px solid #3a5380; border-radius: 4px; }
     .menu-toggle span { display: block; height: 2px; margin: 6px 0; background: var(--white); }
 
     /* Einstieg */
@@ -181,40 +99,42 @@ input:focus, select:focus, textarea:focus {
     .hero .lead { max-width: 650px; margin: 0 auto 32px; color: var(--muted-dark); font-size: 1.1rem; line-height: 1.85; }
     .hero-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; }
     .hero-points { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 24px; margin-top: 32px; color: var(--muted-dark); font-size: 0.78rem; }
-    .hero-points span::before { content: "✓"; margin-right: 7px; color: var(--accent); font-weight: 700; }
+    .hero-points span::before { content: "✓"; margin-right: 7px; color: var(--light); font-weight: 700; }
 
     /* Demo */
     .demo-wrap { padding-bottom: 90px; }
-    .demo-box { overflow: hidden; border: 1px solid #2b3858; border-radius: 12px; background: var(--ink-2); min-height: 520px; }
+    .demo-box { overflow: hidden; border: 1px solid #2a4875; border-radius: 12px; background: var(--ink-2); min-height: 520px; }
     .demo-start {
       min-height: 520px; display: flex; flex-direction: column; align-items: center; justify-content: center;
       padding: 40px; text-align: center; color: var(--white);
-      background: radial-gradient(ellipse at 50% 40%, #243357 0%, #0f1a33 70%);
+      background: radial-gradient(ellipse at 50% 40%, #1d4075 0%, #0b1f3a 72%);
     }
-    .demo-start .badge { display: inline-block; padding: 6px 14px; margin-bottom: 26px; border: 1px solid var(--accent); color: var(--accent); border-radius: 30px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .demo-start .badge { display: inline-block; padding: 6px 14px; margin-bottom: 26px; border: 1px solid var(--light); color: var(--light); border-radius: 30px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
     .demo-start h2 { margin-bottom: 14px; font-size: clamp(1.9rem, 3.5vw, 3rem); }
     .demo-start p { max-width: 520px; color: var(--muted-dark); font-size: 0.93rem; margin-bottom: 26px; }
     .demo-frame { display: block; width: 100%; height: 760px; border: 0; background: #f7f6f1; }
 
-    /* Abschnitte */
+    /* Abschnittsköpfe */
     .section-head { display: grid; grid-template-columns: 1.15fr 1fr; align-items: end; gap: 80px; margin-bottom: 44px; }
     .section-head h2 { margin-bottom: 0; }
     .section-head > p { color: var(--muted); font-size: 0.97rem; max-width: 440px; margin-bottom: 4px; }
-    .dark .section-head > p { color: var(--muted-dark); }
 
+    /* Leistungen */
     .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
     .card { display: flex; flex-direction: column; padding: 32px; background: var(--white); border: 2px solid var(--ink); border-radius: var(--radius); }
-    .card-icon { width: 54px; height: 54px; margin-bottom: 26px; display: grid; place-items: center; background: var(--accent); color: var(--ink); border-radius: 50%; font-size: 1.5rem; font-weight: 700; }
+    .card-icon { width: 54px; height: 54px; margin-bottom: 26px; display: grid; place-items: center; background: var(--ink); color: var(--white); border-radius: 50%; font-size: 1.5rem; font-weight: 700; }
     .card p { color: var(--muted); font-size: 0.92rem; }
     .card-foot { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); font-size: 0.76rem; font-weight: 600; }
 
+    /* Nutzen */
     .band { background: var(--cool); padding-block: 90px; }
     .benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 40px; }
     .benefit { border-top: 4px solid var(--ink); padding-top: 22px; }
-    .benefit span { color: var(--accent); font-size: 0.8rem; font-weight: 700; }
+    .benefit span { color: var(--ink-2); font-size: 0.8rem; font-weight: 700; }
     .benefit h3 { margin: 18px 0 10px; }
     .benefit p { margin: 0; color: var(--muted); font-size: 0.9rem; }
 
+    /* Referenzen */
     .references { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
     .reference { padding: 28px; border: 2px dashed #8a95ad; border-radius: var(--radius); background: var(--cool); }
     .reference small { color: var(--muted); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; }
@@ -222,10 +142,11 @@ input:focus, select:focus, textarea:focus {
     .reference p { color: var(--muted); font-size: 0.85rem; margin-bottom: 18px; }
     .reference .soon { display: inline-block; padding: 5px 12px; border-radius: 30px; background: var(--ink); color: var(--white); font-size: 0.7rem; font-weight: 600; }
 
+    /* Ablauf */
     .process { padding-block: 90px; }
     .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 46px; }
-    .step { border-top: 2px solid var(--accent); padding-top: 22px; }
-    .step > span { color: var(--accent); font-size: 0.82rem; font-weight: 700; }
+    .step { border-top: 2px solid #8fa0ba; padding-top: 22px; }
+    .step > span { color: var(--light); font-size: 0.82rem; font-weight: 700; }
     .step h3 { margin: 22px 0 10px; }
     .step p { margin: 0; color: var(--muted-dark); font-size: 0.88rem; }
 
@@ -233,18 +154,18 @@ input:focus, select:focus, textarea:focus {
     .packages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 52px; }
     .package { position: relative; display: flex; flex-direction: column; padding: 32px 28px; background: var(--white); border: 2px solid var(--line); border-radius: var(--radius); }
     .package.featured { background: var(--ink); color: var(--white); border-color: var(--ink); }
-    .package-tag { position: absolute; top: -15px; left: 20px; right: 20px; padding: 5px; border-radius: 4px; text-align: center; background: var(--accent); color: var(--ink); font-size: 0.7rem; font-weight: 700; }
-    .package-cat { margin-bottom: 16px; color: var(--accent); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .package-tag { position: absolute; top: -15px; left: 20px; right: 20px; padding: 5px; border-radius: 4px; text-align: center; background: var(--line); color: var(--ink); border: 1px solid var(--muted-dark); font-size: 0.7rem; font-weight: 700; }
+    .package-cat { margin-bottom: 16px; color: var(--ink-2); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .featured .package-cat { color: var(--light); }
     .package h3 { margin-bottom: 14px; font-family: Georgia, serif; font-size: 2rem; font-weight: 400; }
     .package-desc { min-height: 72px; color: var(--muted); font-size: 0.88rem; }
     .featured .package-desc { color: var(--muted-dark); }
     .package ul { margin: 0 0 24px; padding: 18px 0 0; list-style: none; border-top: 1px solid var(--line); }
-    .featured ul { border-color: #2b3858; }
+    .featured ul { border-color: #2a4875; }
     .package li { position: relative; padding: 7px 0 7px 24px; font-size: 0.84rem; }
-    .package li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+    .package li::before { content: "✓"; position: absolute; left: 0; color: var(--ink-2); font-weight: 700; }
+    .featured li::before { color: var(--light); }
     .package-price { margin-top: auto; padding-top: 14px; font-size: 0.86rem; font-weight: 700; }
-    .featured .button-outline { border-color: var(--white); color: var(--white); }
-    .featured .button-outline:hover { background: var(--white); color: var(--ink); }
 
     /* FAQ */
     .faq-wrap { background: var(--cool); padding-block: 90px; }
@@ -253,7 +174,7 @@ input:focus, select:focus, textarea:focus {
     details:first-child { border-top: 1px solid #b9c1d2; }
     summary { position: relative; padding: 21px 35px 21px 0; cursor: pointer; list-style: none; font-size: 0.97rem; font-weight: 600; }
     summary::-webkit-details-marker { display: none; }
-    summary::after { content: "+"; position: absolute; right: 5px; top: 14px; font-size: 1.5rem; color: var(--accent); }
+    summary::after { content: "+"; position: absolute; right: 5px; top: 14px; font-size: 1.5rem; color: var(--ink-2); }
     details[open] summary::after { content: "−"; }
     details p { padding-right: 25px; color: var(--muted); font-size: 0.9rem; }
 
@@ -261,13 +182,12 @@ input:focus, select:focus, textarea:focus {
     .contact { padding-block: 95px; }
     .contact-layout { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 70px; align-items: start; }
     .contact-info p { color: var(--muted-dark); font-size: 0.95rem; max-width: 420px; }
-    .contact-details { margin-top: 28px; }
-    .contact-details div { padding: 12px 0; border-top: 1px solid #2b3858; }
-    .contact-details dt { color: var(--accent); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+    .contact-details { margin: 28px 0 0; }
+    .contact-details div { padding: 12px 0; border-top: 1px solid #2a4875; }
+    .contact-details dt { color: var(--light); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
     .contact-details dd { margin: 4px 0 0; font-size: 0.92rem; overflow-wrap: anywhere; }
-    dl { margin: 0; }
 
-    .form-card { padding: 36px; background: var(--white); color: var(--text); border-radius: 12px; }
+    .form-card { padding: 36px; background: var(--white); color: var(--ink); border-radius: 12px; }
     .form-card h3 { font-size: 1.5rem; margin-bottom: 6px; }
     .form-card > p { color: var(--muted); font-size: 0.88rem; margin-bottom: 22px; }
     .field { margin-bottom: 16px; }
@@ -276,37 +196,40 @@ input:focus, select:focus, textarea:focus {
     label .opt { font-weight: 400; color: var(--muted); }
     input[type="text"], input[type="email"], input[type="tel"], select, textarea {
       width: 100%; padding: 13px 14px; border: 2px solid #aab3c5; border-radius: 6px;
-      background: var(--white); color: var(--text); font-size: 0.95rem;
+      background: var(--white); color: var(--ink); font-size: 0.95rem;
     }
     textarea { min-height: 140px; resize: vertical; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.25); }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--ink-2); box-shadow: 0 0 0 3px rgba(18, 48, 90, 0.25); }
     .check { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 20px; }
-    .check input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent); flex-shrink: 0; }
+    .check input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--ink); flex-shrink: 0; }
     .check label { margin: 0; font-weight: 400; font-size: 0.82rem; color: var(--muted); }
-    .check a, .link-btn { text-decoration: underline; color: var(--text); background: none; border: 0; padding: 0; font: inherit; }
+    .link-btn { text-decoration: underline; color: var(--ink); background: none; border: 0; padding: 0; font: inherit; }
     .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
     .form-status { margin-top: 16px; padding: 13px 16px; border-radius: 6px; font-size: 0.9rem; display: none; }
-    .form-status.ok { display: block; background: #d9f5e3; color: #0d4a26; border: 1px solid #7fcf9c; }
-    .form-status.err { display: block; background: #fde2dc; color: #7a1a0a; border: 1px solid #f09a88; }
+    .form-status.ok { display: block; background: #e4ebf5; color: var(--ink); border: 1px solid #9db3d3; }
+    .form-status.err { display: block; background: #eceff3; color: var(--ink); border: 1px solid #8a95ad; border-left: 5px solid var(--ink); }
+    .form-status.ok::before { content: "✓ "; font-weight: 700; }
+    .form-status.err::before { content: "Hinweis: "; font-weight: 700; }
     .form-card button[type="submit"] { width: 100%; }
     .form-card button[disabled] { opacity: 0.6; cursor: wait; }
 
-    /* Footer / Dialoge */
+    /* Fußbereich und Dialoge */
     .footer { background: var(--ink-3); color: var(--white); padding-top: 30px; }
     .footer-row { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
     .footer-row p { margin: 0; color: var(--muted-dark); font-size: 0.84rem; }
     .legal-btn { padding: 8px; border: 0; background: transparent; font-size: 0.8rem; color: var(--white); }
-    .legal-btn:hover { text-decoration: underline; color: var(--accent); }
-    .footer-bottom { margin-top: 22px; padding-block: 20px; border-top: 1px solid #25314d; color: var(--muted-dark); font-size: 0.7rem; display: flex; justify-content: space-between; gap: 20px; }
+    .legal-btn:hover { text-decoration: underline; color: var(--light); }
+    .footer-bottom { margin-top: 22px; padding-block: 20px; border-top: 1px solid #1f3a63; color: var(--muted-dark); font-size: 0.7rem; display: flex; justify-content: space-between; gap: 20px; }
 
-    dialog { width: min(780px, calc(100% - 32px)); max-height: 88vh; padding: 30px 32px; border: 0; border-radius: 12px; background: var(--white); color: var(--text); }
-    dialog::backdrop { background: rgba(6, 11, 22, 0.75); backdrop-filter: blur(4px); }
+    dialog { width: min(780px, calc(100% - 32px)); max-height: 88vh; padding: 30px 32px; border: 0; border-radius: 12px; background: var(--white); color: var(--ink); }
+    dialog::backdrop { background: rgba(7, 20, 38, 0.78); backdrop-filter: blur(4px); }
     .dialog-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
     .dialog-head h2 { font-size: 2rem; }
-    .dialog-close { border: 0; background: transparent; font-size: 2rem; line-height: 1; padding: 0 8px; color: var(--text); }
+    .dialog-close { border: 0; background: transparent; font-size: 2rem; line-height: 1; padding: 0 8px; color: var(--ink); }
     dialog h3 { margin: 24px 0 8px; font-size: 1.05rem; }
     dialog p, dialog li { font-size: 0.89rem; }
-    .legal-warning { padding: 12px; background: #fff0e3; border-left: 4px solid var(--accent); border-radius: 4px; }
+    dialog .note { color: var(--muted); }
+    .legal-warning { padding: 12px; background: var(--cool); border-left: 4px solid var(--ink-2); border-radius: 4px; }
 
     @media (max-width: 1050px) {
       .container { width: calc(100% - 44px); }
@@ -322,7 +245,7 @@ input:focus, select:focus, textarea:focus {
       .nav { height: 72px; }
       .logo { font-size: 1.6rem; }
       .menu-toggle { display: block; }
-      .nav-links { position: absolute; top: 72px; left: 0; right: 0; display: none; flex-direction: column; align-items: stretch; gap: 4px; padding: 18px 24px; background: var(--ink); border-bottom: 1px solid #25314d; font-size: 0.95rem; }
+      .nav-links { position: absolute; top: 72px; left: 0; right: 0; display: none; flex-direction: column; align-items: stretch; gap: 4px; padding: 18px 24px; background: var(--ink); border-bottom: 1px solid #1f3a63; font-size: 0.95rem; }
       .nav-links.open { display: flex; }
       .nav-links a { padding: 10px 0; }
       .nav-cta { padding: 12px 16px !important; margin-top: 8px; text-align: center; }
@@ -350,9 +273,6 @@ input:focus, select:focus, textarea:focus {
 
 <body>
   <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
-
-  <!-- Vor dem öffentlichen Start entfernen -->
-  <div class="preview-banner">Website-Entwurf · Referenzen und Rechtstexte werden vor Veröffentlichung vervollständigt.</div>
 
   <header class="header">
     <div class="container nav">
@@ -386,7 +306,7 @@ input:focus, select:focus, textarea:focus {
             mit einem 360°-Rundgang online erlebbar – für Ihre Website und Google Maps.
           </p>
           <div class="hero-buttons">
-            <a class="button button-accent" href="#demo">Beispielräume erleben ↓</a>
+            <a class="button button-light" href="#demo">Beispielräume erleben ↓</a>
             <a class="button button-outline" href="#kontakt">Projekt besprechen ↗</a>
           </div>
           <div class="hero-points">
@@ -406,7 +326,7 @@ input:focus, select:focus, textarea:focus {
               Entdecken Sie drei illustrative Beispielräume: Restaurant, Ferienwohnung und Studio.
               Beim Start wird die Demo mit einer externen 3D-Bibliothek geladen.
             </p>
-            <button class="button button-accent" id="demo-button" type="button">Demo starten ↗</button>
+            <button class="button button-light" id="demo-button" type="button">Demo starten ↗</button>
           </div>
         </div>
         <p class="note" style="margin-top:14px">
@@ -545,7 +465,7 @@ input:focus, select:focus, textarea:focus {
             <li>Abstimmungsrunde vor Veröffentlichung</li>
           </ul>
           <p class="package-price">Preis auf Anfrage</p>
-          <a class="button button-accent" href="#kontakt">Raumgefühl anfragen ↗</a>
+          <a class="button button-light" href="#kontakt">Raumgefühl anfragen ↗</a>
         </article>
 
         <article class="package">
@@ -657,7 +577,7 @@ input:focus, select:focus, textarea:focus {
               </label>
             </div>
 
-            <button class="button button-accent" id="f-submit" type="submit">Anfrage senden ↗</button>
+            <button class="button button-dark" id="f-submit" type="submit">Anfrage senden ↗</button>
             <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
           </form>
         </div>
@@ -690,7 +610,7 @@ input:focus, select:focus, textarea:focus {
 
     <p><strong>Angaben gemäß § 5 DDG</strong></p>
     <p>ReMo 360<br>Inhaber: [Vorname Nachname]<br>
-      <em>(Bei einer Gesellschaft stattdessen: vollständige Gesellschaftsbezeichnung, Gesellschafter und Vertretungsberechtigte.)</em></p>
+      <em style="color:#5b6472">(Bei einer Gesellschaft stattdessen: vollständige Gesellschaftsbezeichnung, Gesellschafter und Vertretungsberechtigte.)</em></p>
     <p>[Straße und Hausnummer]<br>[Postleitzahl und Ort]<br>Deutschland</p>
 
     <h3>Kontakt</h3>
