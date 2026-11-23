@@ -5,293 +5,257 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ReMo 360 | 360°-Rundgänge für Website und Google Maps</title>
   <meta name="description" content="ReMo 360 erstellt virtuelle 360°-Rundgänge für Restaurants, Ferienunterkünfte und Studios – für Ihre Website und Google Maps.">
-  <meta name="theme-color" content="#f8f7f3">
+  <meta name="theme-color" content="#0b1324">
 
   <style>
     :root {
-      --bg: #f8f7f3;
-      --surface: #fffefa;
-      --green: #243b32;
-      --green-soft: #eaf0e3;
-      --sand: #eeeee5;
-      --text: #263b32;
-      --muted: #69756d;
-      --line: #dce2d7;
+      --ink: #0b1324;
+      --ink-2: #141f38;
+      --ink-3: #060b16;
+      --white: #ffffff;
+      --cool: #eef1f6;
+      --line: #d3d9e4;
+      --text: #0b1324;
+      --muted: #4a5468;
+      --muted-dark: #b7c0d4;
+      --accent: #ff6b2c;
+      --accent-hover: #ff8650;
       --radius: 8px;
     }
 
     * { box-sizing: border-box; }
-
-    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    html { scroll-behavior: smooth; scroll-padding-top: 96px; }
 
     body {
       margin: 0;
       font-family: "Segoe UI", Arial, sans-serif;
-      background: var(--bg);
+      background: var(--white);
       color: var(--text);
       line-height: 1.7;
     }
 
     a { color: inherit; text-decoration: none; }
-    button { font: inherit; cursor: pointer; }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
     h1, h2, h3, p { margin-top: 0; }
 
-    h1, h2 { font-weight: 400; line-height: 1.1; letter-spacing: -0.05em; }
-    h1 { font-size: clamp(2.9rem, 6vw, 5.4rem); margin-bottom: 26px; }
+    h1, h2 { font-weight: 400; line-height: 1.08; letter-spacing: -0.05em; }
+    h1 { font-size: clamp(2.9rem, 6.4vw, 5.6rem); margin-bottom: 26px; }
     h2 { font-size: clamp(2.2rem, 4.2vw, 3.7rem); margin-bottom: 22px; }
-    h3 { font-size: 1.25rem; font-weight: 500; line-height: 1.35; }
-    em { font-family: Georgia, serif; font-weight: 400; }
+    h3 { font-size: 1.25rem; font-weight: 600; line-height: 1.35; }
+    em { font-family: Georgia, serif; font-weight: 400; color: var(--accent); }
 
-    :focus-visible { outline: 3px solid #809c63; outline-offset: 4px; }
+    :focus-visible { outline: 3px solid var(--accent); outline-offset: 4px; }
 
     .container { width: min(1180px, calc(100% - 64px)); margin-inline: auto; }
     .section { padding-block: 95px; }
     .eyebrow {
-      margin-bottom: 22px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.17em;
-      text-transform: uppercase;
+      margin-bottom: 20px;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--accent);
     }
-    .note { color: var(--muted); font-size: 0.76rem; line-height: 1.8; }
+    .note { color: var(--muted); font-size: 0.78rem; line-height: 1.8; }
+
+    .dark { background: var(--ink); color: var(--white); }
+    .dark .note, .dark .muted { color: var(--muted-dark); }
 
     .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      padding: 15px 23px;
-      border: 1px solid transparent;
-      border-radius: 4px;
-      font-size: 0.86rem;
-      font-weight: 500;
-      transition: transform 0.2s, background 0.2s;
+      display: inline-flex; align-items: center; justify-content: center; gap: 18px;
+      padding: 15px 24px; border: 2px solid transparent; border-radius: 4px;
+      font-size: 0.88rem; font-weight: 700;
+      transition: transform 0.2s, background 0.2s, color 0.2s;
     }
     .button:hover { transform: translateY(-2px); }
-    .button-primary { background: var(--green); color: #fff; }
-    .button-primary:hover { background: #3a5547; }
-    .button-outline { border-color: #acb9a5; background: transparent; }
-    .button-outline:hover { background: var(--green-soft); }
+    .button-accent { background: var(--accent); color: var(--ink); }
+    .button-accent:hover { background: var(--accent-hover); }
+    .button-dark { background: var(--ink); color: var(--white); }
+    .button-dark:hover { background: var(--ink-2); }
+    .button-outline { border-color: var(--ink); color: var(--ink); background: transparent; }
+    .button-outline:hover { background: var(--ink); color: var(--white); }
+    .dark .button-outline { border-color: var(--white); color: var(--white); }
+    .dark .button-outline:hover { background: var(--white); color: var(--ink); }
 
-    .skip-link {
-      position: absolute; left: 20px; top: -100px; z-index: 100;
-      padding: 12px; background: var(--green); color: #fff;
-    }
+    .skip-link { position: absolute; left: 20px; top: -100px; z-index: 100; padding: 12px; background: var(--accent); color: var(--ink); font-weight: 700; }
     .skip-link:focus { top: 12px; }
 
-    .preview-banner {
-      padding: 8px 20px;
-      background: #e9eddf;
-      color: #4d5d40;
-      text-align: center;
-      font-size: 0.72rem;
-    }
+    .preview-banner { padding: 8px 20px; background: var(--accent); color: var(--ink); text-align: center; font-size: 0.74rem; font-weight: 600; }
 
     /* Navigation */
-    .header {
-      position: sticky; top: 0; z-index: 30;
-      background: rgba(248, 247, 243, 0.97);
-      border-bottom: 1px solid var(--line);
-    }
-    .nav { display: flex; align-items: center; justify-content: space-between; height: 84px; gap: 24px; }
-    .logo { font-size: 1.8rem; font-weight: 650; letter-spacing: -0.08em; white-space: nowrap; }
-    .logo span { font-weight: 400; margin-left: 6px; }
-    .logo sup { color: #8da372; font-size: 0.6em; }
-    .nav-links { display: flex; align-items: center; gap: 28px; font-size: 0.84rem; }
-    .nav-links > a:hover { color: #78905b; }
-    .nav-cta { padding: 10px 17px; border: 1px solid var(--green); border-radius: 4px; }
-    .menu-toggle {
-      display: none; width: 44px; height: 44px; padding: 11px;
-      background: transparent; border: 1px solid var(--line); border-radius: 4px;
-    }
-    .menu-toggle span { display: block; height: 1px; margin: 6px 0; background: var(--green); }
+    .header { position: sticky; top: 0; z-index: 30; background: rgba(11, 19, 36, 0.97); border-bottom: 1px solid #25314d; color: var(--white); }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 80px; gap: 24px; }
+    .logo { font-size: 1.8rem; font-weight: 700; letter-spacing: -0.08em; white-space: nowrap; }
+    .logo span { font-weight: 300; margin-left: 6px; }
+    .logo sup { color: var(--accent); font-size: 0.6em; }
+    .nav-links { display: flex; align-items: center; gap: 26px; font-size: 0.85rem; }
+    .nav-links > a:not(.nav-cta):hover { color: var(--accent); }
+    .nav-cta { padding: 10px 18px; background: var(--accent); color: var(--ink); border-radius: 4px; font-weight: 700; }
+    .nav-cta:hover { background: var(--accent-hover); }
+    .menu-toggle { display: none; width: 44px; height: 44px; padding: 11px; background: transparent; border: 1px solid #3a4768; border-radius: 4px; }
+    .menu-toggle span { display: block; height: 2px; margin: 6px 0; background: var(--white); }
 
     /* Einstieg */
-    .hero { padding-block: 85px 50px; text-align: center; }
-    .hero-text { max-width: 880px; margin-inline: auto; }
-    .hero p.lead { max-width: 640px; margin: 0 auto 30px; color: var(--muted); font-size: 1.1rem; line-height: 1.85; }
+    .hero { padding-block: 90px 56px; text-align: center; }
+    .hero-text { max-width: 900px; margin-inline: auto; }
+    .hero .lead { max-width: 650px; margin: 0 auto 32px; color: var(--muted-dark); font-size: 1.1rem; line-height: 1.85; }
     .hero-buttons { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; }
-    .hero-points {
-      display: flex; justify-content: center; flex-wrap: wrap;
-      gap: 8px 22px; margin-top: 30px; color: var(--muted); font-size: 0.75rem;
-    }
-    .hero-points span::before { content: "✓"; margin-right: 7px; color: #78905f; }
+    .hero-points { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px 24px; margin-top: 32px; color: var(--muted-dark); font-size: 0.78rem; }
+    .hero-points span::before { content: "✓"; margin-right: 7px; color: var(--accent); font-weight: 700; }
 
     /* Demo */
-    .demo-wrap { padding-bottom: 80px; }
-    .demo-frame-box {
-      overflow: hidden;
-      border: 1px solid #d5decc;
-      border-radius: 12px;
-      background: #20362c;
-      min-height: 520px;
-    }
+    .demo-wrap { padding-bottom: 90px; }
+    .demo-box { overflow: hidden; border: 1px solid #2b3858; border-radius: 12px; background: var(--ink-2); min-height: 520px; }
     .demo-start {
-      min-height: 520px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 40px; text-align: center; color: #fff;
-      background: radial-gradient(ellipse at center, #36574a 0%, #20362c 70%);
+      min-height: 520px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 40px; text-align: center; color: var(--white);
+      background: radial-gradient(ellipse at 50% 40%, #243357 0%, #0f1a33 70%);
     }
-    .demo-start .badge {
-      display: inline-block; padding: 6px 14px; margin-bottom: 26px;
-      border: 1px solid rgba(255,255,255,0.3); border-radius: 30px;
-      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
-    }
-    .demo-start h2 { color: #fff; margin-bottom: 14px; font-size: clamp(1.9rem, 3.5vw, 3rem); }
-    .demo-start p { max-width: 520px; color: #d2dccf; font-size: 0.93rem; margin-bottom: 26px; }
-    .demo-start .button-primary { background: #d4e5b3; color: var(--green); }
-    .demo-start .button-primary:hover { background: #e4f0c9; }
+    .demo-start .badge { display: inline-block; padding: 6px 14px; margin-bottom: 26px; border: 1px solid var(--accent); color: var(--accent); border-radius: 30px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    .demo-start h2 { margin-bottom: 14px; font-size: clamp(1.9rem, 3.5vw, 3rem); }
+    .demo-start p { max-width: 520px; color: var(--muted-dark); font-size: 0.93rem; margin-bottom: 26px; }
     .demo-frame { display: block; width: 100%; height: 760px; border: 0; background: #f7f6f1; }
 
-    /* Leistungen und Karten */
-    .section-head {
-      display: grid; grid-template-columns: 1.15fr 1fr; align-items: end;
-      gap: 80px; margin-bottom: 42px;
-    }
+    /* Abschnitte */
+    .section-head { display: grid; grid-template-columns: 1.15fr 1fr; align-items: end; gap: 80px; margin-bottom: 44px; }
     .section-head h2 { margin-bottom: 0; }
-    .section-head > p { color: var(--muted); font-size: 0.95rem; max-width: 430px; margin-bottom: 4px; }
+    .section-head > p { color: var(--muted); font-size: 0.97rem; max-width: 440px; margin-bottom: 4px; }
+    .dark .section-head > p { color: var(--muted-dark); }
 
     .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-    .card {
-      display: flex; flex-direction: column;
-      padding: 32px; background: var(--surface);
-      border: 1px solid var(--line); border-radius: var(--radius);
-    }
-    .card-icon { margin-bottom: 28px; color: #7c9166; font-size: 2.4rem; line-height: 1; }
-    .card p { color: var(--muted); font-size: 0.9rem; }
-    .card-foot { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--line); font-size: 0.72rem; }
+    .card { display: flex; flex-direction: column; padding: 32px; background: var(--white); border: 2px solid var(--ink); border-radius: var(--radius); }
+    .card-icon { width: 54px; height: 54px; margin-bottom: 26px; display: grid; place-items: center; background: var(--accent); color: var(--ink); border-radius: 50%; font-size: 1.5rem; font-weight: 700; }
+    .card p { color: var(--muted); font-size: 0.92rem; }
+    .card-foot { margin-top: auto; padding-top: 18px; border-top: 1px solid var(--line); font-size: 0.76rem; font-weight: 600; }
 
-    /* Nutzen */
-    .band { background: var(--sand); padding-block: 85px; }
-    .benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 40px; }
-    .benefit { border-top: 1px solid #cdd5c3; padding-top: 22px; }
-    .benefit span { color: #7e916a; font-size: 0.72rem; }
-    .benefit h3 { margin: 22px 0 10px; }
-    .benefit p { margin: 0; color: var(--muted); font-size: 0.88rem; }
+    .band { background: var(--cool); padding-block: 90px; }
+    .benefits { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; margin-top: 40px; }
+    .benefit { border-top: 4px solid var(--ink); padding-top: 22px; }
+    .benefit span { color: var(--accent); font-size: 0.8rem; font-weight: 700; }
+    .benefit h3 { margin: 18px 0 10px; }
+    .benefit p { margin: 0; color: var(--muted); font-size: 0.9rem; }
 
-    /* Referenzen */
     .references { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-    .reference {
-      padding: 26px; border: 1px dashed #b9c4ad; border-radius: var(--radius);
-      background: rgba(255,254,250,0.6);
-    }
-    .reference small { color: var(--muted); font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; }
-    .reference h3 { margin: 14px 0 8px; font-family: Georgia, serif; font-weight: 400; }
-    .reference p { color: var(--muted); font-size: 0.83rem; margin-bottom: 18px; }
-    .reference .soon {
-      display: inline-block; padding: 6px 12px; border-radius: 30px;
-      background: #e8edde; font-size: 0.7rem;
-    }
+    .reference { padding: 28px; border: 2px dashed #8a95ad; border-radius: var(--radius); background: var(--cool); }
+    .reference small { color: var(--muted); font-size: 0.7rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 700; }
+    .reference h3 { margin: 14px 0 8px; }
+    .reference p { color: var(--muted); font-size: 0.85rem; margin-bottom: 18px; }
+    .reference .soon { display: inline-block; padding: 5px 12px; border-radius: 30px; background: var(--ink); color: var(--white); font-size: 0.7rem; font-weight: 600; }
 
-    /* Ablauf */
-    .process { background: var(--green); color: #f7f6ef; padding-block: 85px; }
-    .process .eyebrow { color: #c2d7a7; }
+    .process { padding-block: 90px; }
     .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; margin-top: 46px; }
-    .step { border-top: 1px solid #66796b; padding-top: 22px; }
-    .step > span { color: #bfd3a4; font-size: 0.76rem; }
-    .step h3 { margin: 24px 0 10px; }
-    .step p { margin: 0; color: #ced6cb; font-size: 0.86rem; }
+    .step { border-top: 2px solid var(--accent); padding-top: 22px; }
+    .step > span { color: var(--accent); font-size: 0.82rem; font-weight: 700; }
+    .step h3 { margin: 22px 0 10px; }
+    .step p { margin: 0; color: var(--muted-dark); font-size: 0.88rem; }
 
     /* Pakete */
     .packages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 52px; }
-    .package {
-      position: relative; display: flex; flex-direction: column;
-      padding: 32px 28px; background: var(--surface);
-      border: 1px solid var(--line); border-radius: var(--radius);
-    }
-    .package.featured { border-color: #8c9f78; background: #eff3e8; }
-    .package-tag {
-      position: absolute; top: -14px; left: 20px; right: 20px;
-      padding: 5px; border-radius: 4px; text-align: center;
-      background: var(--green); color: #fff; font-size: 0.65rem;
-    }
-    .package-cat { margin-bottom: 18px; color: var(--muted); font-size: 0.67rem; letter-spacing: 0.14em; text-transform: uppercase; }
-    .package h3 { margin-bottom: 16px; font-family: Georgia, serif; font-size: 2rem; font-weight: 400; }
-    .package-desc { min-height: 72px; color: var(--muted); font-size: 0.87rem; }
+    .package { position: relative; display: flex; flex-direction: column; padding: 32px 28px; background: var(--white); border: 2px solid var(--line); border-radius: var(--radius); }
+    .package.featured { background: var(--ink); color: var(--white); border-color: var(--ink); }
+    .package-tag { position: absolute; top: -15px; left: 20px; right: 20px; padding: 5px; border-radius: 4px; text-align: center; background: var(--accent); color: var(--ink); font-size: 0.7rem; font-weight: 700; }
+    .package-cat { margin-bottom: 16px; color: var(--accent); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+    .package h3 { margin-bottom: 14px; font-family: Georgia, serif; font-size: 2rem; font-weight: 400; }
+    .package-desc { min-height: 72px; color: var(--muted); font-size: 0.88rem; }
+    .featured .package-desc { color: var(--muted-dark); }
     .package ul { margin: 0 0 24px; padding: 18px 0 0; list-style: none; border-top: 1px solid var(--line); }
-    .package li { position: relative; padding: 7px 0 7px 23px; font-size: 0.82rem; }
-    .package li::before { content: "✓"; position: absolute; left: 0; color: #809567; }
-    .package-price { margin-top: auto; padding-top: 14px; font-size: 0.85rem; font-weight: 500; }
+    .featured ul { border-color: #2b3858; }
+    .package li { position: relative; padding: 7px 0 7px 24px; font-size: 0.84rem; }
+    .package li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+    .package-price { margin-top: auto; padding-top: 14px; font-size: 0.86rem; font-weight: 700; }
+    .featured .button-outline { border-color: var(--white); color: var(--white); }
+    .featured .button-outline:hover { background: var(--white); color: var(--ink); }
 
     /* FAQ */
-    .faq-wrap { background: var(--sand); padding-block: 85px; }
+    .faq-wrap { background: var(--cool); padding-block: 90px; }
     .faq-layout { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: 80px; }
-    details { border-bottom: 1px solid #d1dac7; }
-    details:first-child { border-top: 1px solid #d1dac7; }
-    summary { position: relative; padding: 21px 35px 21px 0; cursor: pointer; list-style: none; font-size: 0.93rem; }
+    details { border-bottom: 1px solid #b9c1d2; }
+    details:first-child { border-top: 1px solid #b9c1d2; }
+    summary { position: relative; padding: 21px 35px 21px 0; cursor: pointer; list-style: none; font-size: 0.97rem; font-weight: 600; }
     summary::-webkit-details-marker { display: none; }
-    summary::after { content: "+"; position: absolute; right: 5px; top: 16px; font-size: 1.35rem; }
+    summary::after { content: "+"; position: absolute; right: 5px; top: 14px; font-size: 1.5rem; color: var(--accent); }
     details[open] summary::after { content: "−"; }
-    details p { padding-right: 25px; color: var(--muted); font-size: 0.88rem; }
+    details p { padding-right: 25px; color: var(--muted); font-size: 0.9rem; }
 
     /* Kontakt */
-    .contact { display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center; }
-    .contact-card { padding: 38px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
-    .badge-soft {
-      display: inline-block; padding: 6px 13px; border: 1px solid #d6decc;
-      border-radius: 30px; background: #f1f4ea; font-size: 0.66rem;
-    }
-    .contact-card h3 { margin: 22px 0 12px; font-size: 1.5rem; }
-    .contact-card > p { color: var(--muted); font-size: 0.88rem; }
-    dl { margin: 24px 0; }
-    dl > div { padding: 12px 0; border-top: 1px solid var(--line); }
-    dt { color: var(--muted); font-size: 0.67rem; letter-spacing: 0.1em; text-transform: uppercase; }
-    dd { margin: 4px 0 0; font-size: 0.9rem; overflow-wrap: anywhere; }
+    .contact { padding-block: 95px; }
+    .contact-layout { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 70px; align-items: start; }
+    .contact-info p { color: var(--muted-dark); font-size: 0.95rem; max-width: 420px; }
+    .contact-details { margin-top: 28px; }
+    .contact-details div { padding: 12px 0; border-top: 1px solid #2b3858; }
+    .contact-details dt { color: var(--accent); font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+    .contact-details dd { margin: 4px 0 0; font-size: 0.92rem; overflow-wrap: anywhere; }
+    dl { margin: 0; }
 
-    /* Footer und Dialoge */
-    .footer { border-top: 1px solid var(--line); padding-top: 30px; }
+    .form-card { padding: 36px; background: var(--white); color: var(--text); border-radius: 12px; }
+    .form-card h3 { font-size: 1.5rem; margin-bottom: 6px; }
+    .form-card > p { color: var(--muted); font-size: 0.88rem; margin-bottom: 22px; }
+    .field { margin-bottom: 16px; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    label { display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 700; }
+    label .opt { font-weight: 400; color: var(--muted); }
+    input[type="text"], input[type="email"], input[type="tel"], select, textarea {
+      width: 100%; padding: 13px 14px; border: 2px solid #aab3c5; border-radius: 6px;
+      background: var(--white); color: var(--text); font-size: 0.95rem;
+    }
+    textarea { min-height: 140px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(255, 107, 44, 0.25); }
+    .check { display: flex; gap: 12px; align-items: flex-start; margin: 4px 0 20px; }
+    .check input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent); flex-shrink: 0; }
+    .check label { margin: 0; font-weight: 400; font-size: 0.82rem; color: var(--muted); }
+    .check a, .link-btn { text-decoration: underline; color: var(--text); background: none; border: 0; padding: 0; font: inherit; }
+    .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .form-status { margin-top: 16px; padding: 13px 16px; border-radius: 6px; font-size: 0.9rem; display: none; }
+    .form-status.ok { display: block; background: #d9f5e3; color: #0d4a26; border: 1px solid #7fcf9c; }
+    .form-status.err { display: block; background: #fde2dc; color: #7a1a0a; border: 1px solid #f09a88; }
+    .form-card button[type="submit"] { width: 100%; }
+    .form-card button[disabled] { opacity: 0.6; cursor: wait; }
+
+    /* Footer / Dialoge */
+    .footer { background: var(--ink-3); color: var(--white); padding-top: 30px; }
     .footer-row { display: flex; justify-content: space-between; align-items: center; gap: 24px; }
-    .footer-row p { margin: 0; color: var(--muted); font-size: 0.82rem; }
-    .legal-btn { padding: 8px; border: 0; background: transparent; font-size: 0.78rem; color: var(--text); }
-    .legal-btn:hover { text-decoration: underline; }
-    .footer-bottom { margin-top: 24px; padding-block: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.68rem; display: flex; justify-content: space-between; gap: 20px; }
+    .footer-row p { margin: 0; color: var(--muted-dark); font-size: 0.84rem; }
+    .legal-btn { padding: 8px; border: 0; background: transparent; font-size: 0.8rem; color: var(--white); }
+    .legal-btn:hover { text-decoration: underline; color: var(--accent); }
+    .footer-bottom { margin-top: 22px; padding-block: 20px; border-top: 1px solid #25314d; color: var(--muted-dark); font-size: 0.7rem; display: flex; justify-content: space-between; gap: 20px; }
 
-    dialog {
-      width: min(760px, calc(100% - 32px)); max-height: 88vh; padding: 30px 32px;
-      border: 1px solid var(--line); border-radius: 10px;
-      background: var(--surface); color: var(--text);
-    }
-    dialog::backdrop { background: rgba(22, 42, 33, 0.6); backdrop-filter: blur(4px); }
+    dialog { width: min(780px, calc(100% - 32px)); max-height: 88vh; padding: 30px 32px; border: 0; border-radius: 12px; background: var(--white); color: var(--text); }
+    dialog::backdrop { background: rgba(6, 11, 22, 0.75); backdrop-filter: blur(4px); }
     .dialog-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
     .dialog-head h2 { font-size: 2rem; }
     .dialog-close { border: 0; background: transparent; font-size: 2rem; line-height: 1; padding: 0 8px; color: var(--text); }
     dialog h3 { margin: 24px 0 8px; font-size: 1.05rem; }
-    dialog p, dialog li { font-size: 0.88rem; }
-    .legal-warning { padding: 12px; background: #f0e9d8; border-radius: 4px; }
+    dialog p, dialog li { font-size: 0.89rem; }
+    .legal-warning { padding: 12px; background: #fff0e3; border-left: 4px solid var(--accent); border-radius: 4px; }
 
     @media (max-width: 1050px) {
       .container { width: calc(100% - 44px); }
-      .nav-links { gap: 16px; }
-      .section-head, .contact, .faq-layout { gap: 40px; }
+      .nav-links { gap: 14px; font-size: 0.8rem; }
+      .section-head, .faq-layout, .contact-layout { gap: 40px; }
       .card, .package { padding: 26px 22px; }
     }
 
     @media (max-width: 760px) {
       html { scroll-padding-top: 85px; }
       .container { width: calc(100% - 36px); }
-      .section { padding-block: 62px; }
+      .section, .contact, .band, .process, .faq-wrap { padding-block: 62px; }
       .nav { height: 72px; }
       .logo { font-size: 1.6rem; }
       .menu-toggle { display: block; }
-      .nav-links {
-        position: absolute; top: 72px; left: 0; right: 0;
-        display: none; flex-direction: column; align-items: stretch; gap: 4px;
-        padding: 18px 24px; background: var(--bg); border-bottom: 1px solid var(--line);
-      }
+      .nav-links { position: absolute; top: 72px; left: 0; right: 0; display: none; flex-direction: column; align-items: stretch; gap: 4px; padding: 18px 24px; background: var(--ink); border-bottom: 1px solid #25314d; font-size: 0.95rem; }
       .nav-links.open { display: flex; }
       .nav-links a { padding: 10px 0; }
-      .nav-cta { padding: 11px 15px !important; margin-top: 6px; }
-      .hero { padding-block: 50px 36px; }
+      .nav-cta { padding: 12px 16px !important; margin-top: 8px; text-align: center; }
+      .hero { padding-block: 52px 36px; }
       .demo-wrap { padding-bottom: 56px; }
-      .demo-frame-box, .demo-start { min-height: 440px; }
+      .demo-box, .demo-start { min-height: 440px; }
       .demo-frame { height: 800px; }
-      .section-head, .contact, .faq-layout { grid-template-columns: 1fr; gap: 26px; }
+      .section-head, .faq-layout, .contact-layout { grid-template-columns: 1fr; gap: 26px; }
       .cards, .packages, .references, .benefits { grid-template-columns: 1fr; }
-      .packages { gap: 30px; margin-top: 40px; }
+      .packages { gap: 32px; margin-top: 42px; }
       .package-desc { min-height: 0; }
       .steps { grid-template-columns: repeat(2, 1fr); gap: 28px 20px; }
-      .band, .process, .faq-wrap { padding-block: 60px; }
-      .contact-card { padding: 26px; }
+      .field-row { grid-template-columns: 1fr; gap: 0; }
+      .form-card { padding: 24px 20px; }
       .footer-row { flex-wrap: wrap; }
       .footer-row p { order: 3; width: 100%; }
       .footer-bottom { flex-direction: column; gap: 6px; }
@@ -299,11 +263,7 @@
     }
 
     @media (max-width: 380px) { .steps { grid-template-columns: 1fr; } }
-
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-      * { transition: none !important; }
-    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
   </style>
 </head>
 
@@ -311,7 +271,7 @@
   <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
 
   <!-- Vor dem öffentlichen Start entfernen -->
-  <div class="preview-banner">Website-Entwurf · Kontakt, Referenzen und Rechtstexte werden vor Veröffentlichung vervollständigt.</div>
+  <div class="preview-banner">Website-Entwurf · Referenzen und Rechtstexte werden vor Veröffentlichung vervollständigt.</div>
 
   <header class="header">
     <div class="container nav">
@@ -334,87 +294,74 @@
 
   <main id="inhalt">
 
-    <!-- EINSTIEG -->
-    <section class="container hero" id="start">
-      <div class="hero-text">
-        <p class="eyebrow">Virtuelle Einblicke. Echte Räume.</p>
-        <h1>Online überzeugen,<br><em>bevor der Gast kommt.</em></h1>
-        <p class="lead">
-          Wir machen Ihr Restaurant, Ihre Ferienunterkunft oder Ihr Studio
-          mit einem 360°-Rundgang online erlebbar – für Ihre Website und Google Maps.
-        </p>
-        <div class="hero-buttons">
-          <a class="button button-primary" href="#demo">Beispielräume erleben ↓</a>
-          <a class="button button-outline" href="#kontakt">Projekt besprechen ↗</a>
-        </div>
-        <div class="hero-points">
-          <span>Aufnahme vor Ort</span>
-          <span>Persönliche Betreuung</span>
-          <span>Website und Google Maps</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- DEMO -->
-    <section class="container demo-wrap" id="demo" aria-label="Interaktive Beispielräume">
-      <div class="demo-frame-box" id="demo-box">
-        <div class="demo-start" id="demo-start">
-          <span class="badge">Konzeptdemo · keine Kundenaufnahmen</span>
-          <h2>Schon einmal da sein.</h2>
-          <p>
-            Entdecken Sie drei illustrative Beispielräume: Restaurant, Ferienwohnung und Studio.
-            Beim Start wird die Demo mit einer externen 3D-Bibliothek geladen.
+    <!-- EINSTIEG + DEMO -->
+    <div class="dark">
+      <section class="container hero" id="start">
+        <div class="hero-text">
+          <p class="eyebrow">Virtuelle Einblicke. Echte Räume.</p>
+          <h1>Online überzeugen,<br><em>bevor der Gast kommt.</em></h1>
+          <p class="lead">
+            Wir machen Ihr Restaurant, Ihre Ferienunterkunft oder Ihr Studio
+            mit einem 360°-Rundgang online erlebbar – für Ihre Website und Google Maps.
           </p>
-          <button class="button button-primary" id="demo-button" type="button">Demo starten ↗</button>
+          <div class="hero-buttons">
+            <a class="button button-accent" href="#demo">Beispielräume erleben ↓</a>
+            <a class="button button-outline" href="#kontakt">Projekt besprechen ↗</a>
+          </div>
+          <div class="hero-points">
+            <span>Aufnahme vor Ort</span>
+            <span>Persönliche Betreuung</span>
+            <span>Website und Google Maps</span>
+          </div>
         </div>
-      </div>
-      <p class="note" style="margin-top:14px">
-        Die Demo zeigt künstlich gestaltete 3D-Räume. Restaurant, Ferienwohnung und Studio sind fiktiv.
-        Eine echte Kundentour besteht aus fotografischen 360°-Aufnahmen.
-      </p>
-    </section>
+      </section>
+
+      <section class="container demo-wrap" id="demo" aria-label="Interaktive Beispielräume">
+        <div class="demo-box" id="demo-box">
+          <div class="demo-start">
+            <span class="badge">Konzeptdemo · keine Kundenaufnahmen</span>
+            <h2>Schon einmal da sein.</h2>
+            <p>
+              Entdecken Sie drei illustrative Beispielräume: Restaurant, Ferienwohnung und Studio.
+              Beim Start wird die Demo mit einer externen 3D-Bibliothek geladen.
+            </p>
+            <button class="button button-accent" id="demo-button" type="button">Demo starten ↗</button>
+          </div>
+        </div>
+        <p class="note" style="margin-top:14px">
+          Die Demo zeigt künstlich gestaltete 3D-Räume. Restaurant, Ferienwohnung und Studio sind fiktiv.
+          Eine echte Kundentour besteht aus fotografischen 360°-Aufnahmen.
+        </p>
+      </section>
+    </div>
 
     <!-- LEISTUNGEN -->
-    <section class="container section" id="leistungen" style="padding-top:20px">
+    <section class="container section" id="leistungen">
       <div class="section-head">
         <div>
           <p class="eyebrow">01 / Leistungen</p>
           <h2>Ein Rundgang.<br>Zwei Wege zu Ihren Räumen.</h2>
         </div>
-        <p>
-          Viele potenzielle Gäste prüfen Ihr Angebot online, bevor sie sich entscheiden.
-          Wir sorgen dafür, dass Ihre Räume dort sichtbar sind.
-        </p>
+        <p>Viele potenzielle Gäste prüfen Ihr Angebot online, bevor sie sich entscheiden. Wir sorgen dafür, dass Ihre Räume dort sichtbar sind.</p>
       </div>
 
       <div class="cards">
         <article class="card">
           <span class="card-icon" aria-hidden="true">⌖</span>
           <h3>Google Maps</h3>
-          <p>
-            Ihre Innenansichten sollen dort erscheinen, wo viele Interessenten nach Ihnen suchen.
-            Voraussetzungen und Zuordnung zu Ihrem Standort klären wir vorab.
-          </p>
+          <p>Ihre Innenansichten sollen dort erscheinen, wo viele Interessenten nach Ihnen suchen. Voraussetzungen und Zuordnung zu Ihrem Standort klären wir vorab.</p>
           <span class="card-foot">Sichtbar, wo Ihre Gäste planen</span>
         </article>
-
         <article class="card">
           <span class="card-icon" aria-hidden="true">◎</span>
           <h3>Virtuelle Rundgänge</h3>
-          <p>
-            Wir verbinden Ihre Aufnahmen zu einem interaktiven Rundgang für Ihre Website –
-            mit Raumwechseln und Informationspunkten.
-          </p>
+          <p>Wir verbinden Ihre Aufnahmen zu einem interaktiven Rundgang für Ihre Website – mit Raumwechseln und Informationspunkten.</p>
           <span class="card-foot">Ihr digitaler Empfang</span>
         </article>
-
         <article class="card">
           <span class="card-icon" aria-hidden="true">✓</span>
           <h3>Rundum-Service</h3>
-          <p>
-            Von der Abstimmung über die Aufnahme bis zur Bereitstellung:
-            persönlich, zuverlässig und auf Ihren Betrieb abgestimmt.
-          </p>
+          <p>Von der Abstimmung über die Aufnahme bis zur Bereitstellung: persönlich, zuverlässig und auf Ihren Betrieb abgestimmt.</p>
           <span class="card-foot">Unkompliziert und transparent</span>
         </article>
       </div>
@@ -432,25 +379,11 @@
         <h2>Kleiner Aufwand.<br>Langer Eindruck.</h2>
 
         <div class="benefits">
-          <article class="benefit">
-            <span>01</span>
-            <h3>Vertrauen durch Einblick</h3>
-            <p>Interessenten sehen Atmosphäre, Raumaufteilung und Ausstattung, bevor sie buchen oder reservieren.</p>
-          </article>
-          <article class="benefit">
-            <span>02</span>
-            <h3>Weniger Rückfragen</h3>
-            <p>Ein Rundgang kann viele Fragen zu Räumen und Ausstattung schon vor dem ersten Kontakt beantworten.</p>
-          </article>
-          <article class="benefit">
-            <span>03</span>
-            <h3>Ein stärkerer Auftritt</h3>
-            <p>Ein professioneller Rundgang kann Ihre Website und Ihr Google-Profil überzeugender machen.</p>
-          </article>
+          <article class="benefit"><span>01</span><h3>Vertrauen durch Einblick</h3><p>Interessenten sehen Atmosphäre, Raumaufteilung und Ausstattung, bevor sie buchen oder reservieren.</p></article>
+          <article class="benefit"><span>02</span><h3>Weniger Rückfragen</h3><p>Ein Rundgang kann viele Fragen zu Räumen und Ausstattung schon vor dem ersten Kontakt beantworten.</p></article>
+          <article class="benefit"><span>03</span><h3>Ein stärkerer Auftritt</h3><p>Ein professioneller Rundgang kann Ihre Website und Ihr Google-Profil überzeugender machen.</p></article>
         </div>
-        <p class="note" style="margin-top:28px;color:#69756d">
-          Der konkrete Effekt hängt von Betrieb, Standort und Nachfrage ab und lässt sich nicht garantieren.
-        </p>
+        <p class="note" style="margin-top:28px">Der konkrete Effekt hängt von Betrieb, Standort und Nachfrage ab und lässt sich nicht garantieren.</p>
       </div>
     </section>
 
@@ -461,10 +394,7 @@
           <p class="eyebrow">03 / Referenzen</p>
           <h2>Hier entstehen<br>unsere ersten Einblicke.</h2>
         </div>
-        <p>
-          Wir starten gerade. Sobald freigegebene Kundenprojekte vorliegen,
-          finden Sie sie hier mit direktem Zugang zum Rundgang.
-        </p>
+        <p>Wir starten gerade. Sobald freigegebene Kundenprojekte vorliegen, finden Sie sie hier mit direktem Zugang zum Rundgang.</p>
       </div>
 
       <!--
@@ -473,29 +403,14 @@
         Nur mit schriftlicher Freigabe des Betriebs veröffentlichen.
       -->
       <div class="references">
-        <article class="reference">
-          <small>Gastronomie</small>
-          <h3>Ihr Restaurant könnte hier stehen.</h3>
-          <p>Referenzplatzhalter – noch kein Kundenprojekt.</p>
-          <span class="soon">Folgt</span>
-        </article>
-        <article class="reference">
-          <small>Unterkunft</small>
-          <h3>Ihre Ferienwohnung könnte hier stehen.</h3>
-          <p>Referenzplatzhalter – noch kein Kundenprojekt.</p>
-          <span class="soon">Folgt</span>
-        </article>
-        <article class="reference">
-          <small>Studio und mehr</small>
-          <h3>Ihr Studio könnte hier stehen.</h3>
-          <p>Referenzplatzhalter – noch kein Kundenprojekt.</p>
-          <span class="soon">Folgt</span>
-        </article>
+        <article class="reference"><small>Gastronomie</small><h3>Ihr Restaurant könnte hier stehen.</h3><p>Referenzplatzhalter – noch kein Kundenprojekt.</p><span class="soon">Folgt</span></article>
+        <article class="reference"><small>Unterkunft</small><h3>Ihre Ferienwohnung könnte hier stehen.</h3><p>Referenzplatzhalter – noch kein Kundenprojekt.</p><span class="soon">Folgt</span></article>
+        <article class="reference"><small>Studio und mehr</small><h3>Ihr Studio könnte hier stehen.</h3><p>Referenzplatzhalter – noch kein Kundenprojekt.</p><span class="soon">Folgt</span></article>
       </div>
     </section>
 
     <!-- ABLAUF -->
-    <section class="process" id="ablauf">
+    <section class="process dark" id="ablauf">
       <div class="container">
         <p class="eyebrow">04 / Ablauf</p>
         <h2>Von Ihrer Idee<br>zum virtuellen Rundgang.</h2>
@@ -514,9 +429,9 @@
       <div class="section-head">
         <div>
           <p class="eyebrow">05 / Leistungspakete</p>
-          <h2>Passend zu Ihren Räumen.<br>Nicht von der Stange.</h2>
+          <h2>Das passende Paket<br>für Ihre Räume.</h2>
         </div>
-        <p>Die Pakete geben einen ersten Überblick. Umfang und Angebot stimmen wir persönlich mit Ihnen ab.</p>
+        <p>Wählen Sie den Umfang, der zu Ihrem Betrieb passt. Wir legen ihn gemeinsam fest und nennen Ihnen den Preis nach einem kurzen Gespräch.</p>
       </div>
 
       <div class="packages">
@@ -531,7 +446,7 @@
             <li>Vorbereitung zur Website-Einbindung</li>
             <li>Google-Maps-Veröffentlichung nach Prüfung der Voraussetzungen</li>
           </ul>
-          <p class="package-price">Individuelles Angebot</p>
+          <p class="package-price">Preis auf Anfrage</p>
           <a class="button button-outline" href="#kontakt">Einblick anfragen ↗</a>
         </article>
 
@@ -548,8 +463,8 @@
             <li>Links etwa zu Speisekarte oder Buchung</li>
             <li>Abstimmungsrunde vor Veröffentlichung</li>
           </ul>
-          <p class="package-price">Individuelles Angebot</p>
-          <a class="button button-primary" href="#kontakt">Raumgefühl anfragen ↗</a>
+          <p class="package-price">Preis auf Anfrage</p>
+          <a class="button button-accent" href="#kontakt">Raumgefühl anfragen ↗</a>
         </article>
 
         <article class="package">
@@ -564,15 +479,14 @@
             <li>Optionale laufende Betreuung</li>
             <li>Aktualisierungen separat vereinbar</li>
           </ul>
-          <p class="package-price">Individuelles Angebot</p>
+          <p class="package-price">Preis auf Anfrage</p>
           <a class="button button-outline" href="#kontakt">Panorama anfragen ↗</a>
         </article>
       </div>
 
       <p class="note" style="margin-top:22px">
-        Verbindlicher Leistungsumfang, Nutzungsrechte, Hosting, Laufzeit und mögliche Folgekosten
-        werden im jeweiligen Angebot festgelegt. Zusätzliche Gestaltungselemente beziehen sich auf
-        den Website-Rundgang, nicht automatisch auf Google Maps.
+        Verbindlicher Leistungsumfang, Nutzungsrechte, Hosting, Laufzeit und mögliche Folgekosten werden im jeweiligen Angebot festgelegt.
+        Zusätzliche Gestaltungselemente beziehen sich auf den Website-Rundgang, nicht automatisch auf Google Maps.
       </p>
     </section>
 
@@ -584,61 +498,87 @@
           <h2>Ihre Fragen.<br>Unser Einstieg.</h2>
         </div>
         <div>
-          <details>
-            <summary>Was gehört zu meinem Projekt?</summary>
-            <p>Wir vereinbaren vorab, welche Räume aufgenommen und welche Funktionen umgesetzt werden. Website-Einbindung und Google Maps sind Teil der Projektplanung. Die Details halten wir im Angebot fest.</p>
-          </details>
-          <details>
-            <summary>Wie bereiten wir den Aufnahmetermin vor?</summary>
-            <p>Wir stimmen ab, welche Bereiche gezeigt werden, wann die Aufnahme stattfindet und was vorher aufgeräumt werden soll. Personen, Bildschirme und vertrauliche Unterlagen sollen nicht erkennbar sein.</p>
-          </details>
-          <details>
-            <summary>Kümmert sich ReMo 360 um die Website-Einbindung?</summary>
-            <p>Wir bereiten den Rundgang zur Einbindung vor und besprechen die technische Umsetzung mit Ihnen oder Ihrer Webagentur. Wer die Einbindung durchführt, wird im Angebot vereinbart.</p>
-          </details>
-          <details>
-            <summary>Ist der Rundgang auf Google Maps identisch?</summary>
-            <p>Beide Wege werden getrennt geplant. Logos, Infopunkte und Buchungslinks sind für den Website-Rundgang vorgesehen. Was auf Google Maps möglich ist, prüfen wir im Projekt.</p>
-          </details>
-          <details>
-            <summary>Was ist mit Hosting und späteren Änderungen?</summary>
-            <p>Hosting, Laufzeit, laufende Kosten und Aktualisierungen werden vorab vereinbart. Eine laufende Betreuung kann auf Wunsch Teil des Angebots werden.</p>
-          </details>
+          <details><summary>Was gehört zu meinem Projekt?</summary><p>Wir vereinbaren vorab, welche Räume aufgenommen und welche Funktionen umgesetzt werden. Website-Einbindung und Google Maps sind Teil der Projektplanung. Die Details halten wir im Angebot fest.</p></details>
+          <details><summary>Wie bereiten wir den Aufnahmetermin vor?</summary><p>Wir stimmen ab, welche Bereiche gezeigt werden, wann die Aufnahme stattfindet und was vorher aufgeräumt werden soll. Personen, Bildschirme und vertrauliche Unterlagen sollen nicht erkennbar sein.</p></details>
+          <details><summary>Kümmert sich ReMo 360 um die Website-Einbindung?</summary><p>Wir bereiten den Rundgang zur Einbindung vor und besprechen die technische Umsetzung mit Ihnen oder Ihrer Webagentur. Wer die Einbindung durchführt, wird im Angebot vereinbart.</p></details>
+          <details><summary>Ist der Rundgang auf Google Maps identisch?</summary><p>Beide Wege werden getrennt geplant. Logos, Infopunkte und Buchungslinks sind für den Website-Rundgang vorgesehen. Was auf Google Maps möglich ist, prüfen wir im Projekt.</p></details>
+          <details><summary>Was ist mit Hosting und späteren Änderungen?</summary><p>Hosting, Laufzeit, laufende Kosten und Aktualisierungen werden vorab vereinbart. Eine laufende Betreuung kann auf Wunsch Teil des Angebots werden.</p></details>
         </div>
       </div>
     </section>
 
     <!-- KONTAKT -->
-    <section class="container section" id="kontakt">
-      <div class="contact">
-        <div>
+    <section class="contact dark" id="kontakt">
+      <div class="container contact-layout">
+        <div class="contact-info">
           <p class="eyebrow">07 / Kontakt</p>
           <h2>Zeigen wir,<br>was Ihren Ort<br><em>besonders macht.</em></h2>
-          <p style="max-width:440px;color:var(--muted);font-size:0.95rem">
-            Erzählen Sie uns von Ihren Räumen und Ihrer Idee.
-            Gemeinsam klären wir, welcher Rundgang zu Ihrem Vorhaben passt.
-          </p>
-        </div>
+          <p>Erzählen Sie uns von Ihren Räumen und Ihrer Idee. Wir melden uns zeitnah bei Ihnen und klären gemeinsam, welcher Rundgang passt.</p>
 
-        <div class="contact-card">
-          <span class="badge-soft">Kontaktdaten folgen</span>
-          <h3>Ihr direkter Draht zu ReMo 360.</h3>
-          <p>Die Kontaktmöglichkeiten werden vor dem offiziellen Start ergänzt.</p>
-
-          <!--
-            SPÄTER ERSETZEN:
-            <dd><a href="mailto:IHRE@ADRESSE">IHRE@ADRESSE</a></dd>
-            <dd><a href="tel:+49XXXXXXXXXX">+49 XXX XXXXXXX</a></dd>
-            Kontaktformular oder WhatsApp nur einbauen, wenn
-            die Datenschutzerklärung entsprechend ergänzt wird.
-          -->
-          <dl>
+          <dl class="contact-details">
             <div><dt>E-Mail</dt><dd>[E-Mail-Adresse ergänzen]</dd></div>
             <div><dt>Telefon</dt><dd>[Telefonnummer ergänzen]</dd></div>
             <div><dt>Einsatzgebiet</dt><dd>[Region ergänzen]</dd></div>
           </dl>
+        </div>
 
-          <p class="note" style="margin:0">Dieser Entwurf enthält kein Kontaktformular und versendet keine Anfragen.</p>
+        <div class="form-card">
+          <h3>Projekt anfragen</h3>
+          <p>Felder mit * sind Pflichtfelder.</p>
+
+          <form id="contact-form" action="kontakt.php" method="post" novalidate>
+            <div class="field-row">
+              <div class="field">
+                <label for="f-name">Name *</label>
+                <input type="text" id="f-name" name="name" autocomplete="name" required maxlength="100">
+              </div>
+              <div class="field">
+                <label for="f-email">E-Mail *</label>
+                <input type="email" id="f-email" name="email" autocomplete="email" required maxlength="150">
+              </div>
+            </div>
+
+            <div class="field-row">
+              <div class="field">
+                <label for="f-phone">Telefon <span class="opt">(optional)</span></label>
+                <input type="tel" id="f-phone" name="telefon" autocomplete="tel" maxlength="40">
+              </div>
+              <div class="field">
+                <label for="f-type">Art des Betriebs</label>
+                <select id="f-type" name="betrieb">
+                  <option value="Keine Angabe">Bitte wählen</option>
+                  <option>Restaurant oder Café</option>
+                  <option>Ferienwohnung oder Unterkunft</option>
+                  <option>Hotel oder Veranstaltungsort</option>
+                  <option>Studio</option>
+                  <option>Anderes</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="f-message">Ihre Nachricht *</label>
+              <textarea id="f-message" name="nachricht" required maxlength="3000"></textarea>
+            </div>
+
+            <!-- Spamschutz: Feld muss leer bleiben -->
+            <div class="hp" aria-hidden="true">
+              <label for="f-website">Bitte nicht ausfüllen</label>
+              <input type="text" id="f-website" name="website" tabindex="-1" autocomplete="off">
+            </div>
+            <input type="hidden" name="ts" id="f-ts" value="">
+
+            <div class="check">
+              <input type="checkbox" id="f-privacy" name="datenschutz" value="1" required>
+              <label for="f-privacy">
+                Ich habe die <button type="button" class="link-btn" data-dialog="datenschutz">Datenschutzerklärung</button>
+                zur Kenntnis genommen. *
+              </label>
+            </div>
+
+            <button class="button button-accent" id="f-submit" type="submit">Anfrage senden ↗</button>
+            <div class="form-status" id="form-status" role="status" aria-live="polite"></div>
+          </form>
         </div>
       </div>
     </section>
@@ -659,7 +599,7 @@
     </div>
   </footer>
 
-  <!-- IMPRESSUM (Entwurf, vor Veröffentlichung ausfüllen und prüfen) -->
+  <!-- IMPRESSUM (Entwurf) -->
   <dialog id="impressum" aria-labelledby="imp-title">
     <div class="dialog-head">
       <h2 id="imp-title">Impressum</h2>
@@ -668,16 +608,9 @@
     <p class="legal-warning">Entwurf mit Platzhaltern. Vor dem öffentlichen Start ausfüllen und prüfen. Nicht zutreffende Zeilen entfernen.</p>
 
     <p><strong>Angaben gemäß § 5 DDG</strong></p>
-    <p>
-      ReMo 360<br>
-      Inhaber: [Vorname Nachname]<br>
-      <em>(Bei einer Gesellschaft stattdessen: vollständige Gesellschaftsbezeichnung, Gesellschafter und Vertretungsberechtigte.)</em>
-    </p>
-    <p>
-      [Straße und Hausnummer]<br>
-      [Postleitzahl und Ort]<br>
-      Deutschland
-    </p>
+    <p>ReMo 360<br>Inhaber: [Vorname Nachname]<br>
+      <em>(Bei einer Gesellschaft stattdessen: vollständige Gesellschaftsbezeichnung, Gesellschafter und Vertretungsberechtigte.)</em></p>
+    <p>[Straße und Hausnummer]<br>[Postleitzahl und Ort]<br>Deutschland</p>
 
     <h3>Kontakt</h3>
     <p>Telefon: [Telefonnummer]<br>E-Mail: [geschäftliche E-Mail-Adresse]</p>
@@ -687,7 +620,7 @@
     <p>[Falls vorhanden und anzugeben: Wirtschafts-Identifikationsnummer: …]</p>
   </dialog>
 
-  <!-- DATENSCHUTZ (Entwurf, vor Veröffentlichung prüfen) -->
+  <!-- DATENSCHUTZ (Entwurf) -->
   <dialog id="datenschutz" aria-labelledby="ds-title">
     <div class="dialog-head">
       <h2 id="ds-title">Datenschutzerklärung</h2>
@@ -696,70 +629,36 @@
     <p class="legal-warning">Entwurf mit Platzhaltern, kein veröffentlichungsfertiger Rechtstext. Alle Angaben in eckigen Klammern sind vor dem Start zu ergänzen und mit der tatsächlichen Technik abzugleichen.</p>
 
     <h3>1. Verantwortlicher</h3>
-    <p>
-      [Vollständiger Name beziehungsweise Gesellschaftsbezeichnung], Geschäftsbezeichnung: ReMo 360<br>
+    <p>[Vollständiger Name beziehungsweise Gesellschaftsbezeichnung], Geschäftsbezeichnung: ReMo 360<br>
       [Straße und Hausnummer], [PLZ und Ort], Deutschland<br>
-      Telefon: [Telefonnummer] · E-Mail: [geschäftliche E-Mail-Adresse]
-    </p>
+      Telefon: [Telefonnummer] · E-Mail: [geschäftliche E-Mail-Adresse]</p>
 
     <h3>2. Hosting und Server-Protokolle</h3>
-    <p>
-      Unsere Website wird bei ALL-INKL.COM – Neue Medien Münnich gehostet [Anbieterdaten laut Auftragsverarbeitungsvertrag ergänzen].
-      Der Anbieter verarbeitet in unserem Auftrag Daten, die zur Bereitstellung und Absicherung der Website erforderlich sind,
-      auf Grundlage eines Auftragsverarbeitungsvertrags nach Art. 28 DSGVO [Abschluss vor Veröffentlichung bestätigen].
-    </p>
-    <p>
-      Beim Aufruf werden technisch erforderliche Daten verarbeitet, etwa IP-Adresse, Datum und Uhrzeit, aufgerufene Datei,
-      übertragene Datenmenge sowie Browser- und Betriebssysteminformationen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO
-      (sichere und funktionsfähige Bereitstellung der Website).
-      [Tatsächliche Protokollierung und Speicherdauer des gebuchten Hosting-Pakets ergänzen.]
-    </p>
+    <p>Unsere Website wird bei ALL-INKL.COM – Neue Medien Münnich gehostet [Anbieterdaten laut Auftragsverarbeitungsvertrag ergänzen]. Der Anbieter verarbeitet in unserem Auftrag Daten, die zur Bereitstellung und Absicherung der Website erforderlich sind, auf Grundlage eines Auftragsverarbeitungsvertrags nach Art. 28 DSGVO [Abschluss vor Veröffentlichung bestätigen].</p>
+    <p>Beim Aufruf werden technisch erforderliche Daten verarbeitet, etwa IP-Adresse, Datum und Uhrzeit, aufgerufene Datei, übertragene Datenmenge sowie Browser- und Betriebssysteminformationen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (sichere und funktionsfähige Bereitstellung der Website). [Tatsächliche Protokollierung und Speicherdauer des gebuchten Hosting-Pakets ergänzen.]</p>
 
-    <h3>3. Kontaktaufnahme per E-Mail oder Telefon</h3>
-    <p>
-      Wenn Sie uns kontaktieren, verarbeiten wir Ihre mitgeteilten Daten zur Bearbeitung Ihrer Anfrage.
-      Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO bei Vertragsbezug, sonst Art. 6 Abs. 1 lit. f DSGVO.
-      Wir löschen die Daten, wenn die Anfrage abschließend bearbeitet ist und keine Aufbewahrungspflichten
-      oder Rechtsansprüche entgegenstehen. Unsere E-Mail-Postfächer werden bei ALL-INKL.COM betrieben [bestätigen].
-    </p>
+    <h3>3. Kontaktformular, E-Mail und Telefon</h3>
+    <p>Wenn Sie das Kontaktformular nutzen, verarbeiten wir die von Ihnen eingegebenen Daten: Name, E-Mail-Adresse, optional Telefonnummer, Art des Betriebs und Ihre Nachricht. Wir verwenden sie ausschließlich, um Ihre Anfrage zu bearbeiten und zu beantworten.</p>
+    <p>Das Formular übermittelt Ihre Angaben an unseren Webserver, der sie als E-Mail an unser geschäftliches Postfach weiterleitet. Eine dauerhafte Speicherung der Anfrage auf dem Webserver erfolgt durch das Formular nicht [technisch bestätigen]. Die Verbindung zur Website ist verschlüsselt (HTTPS) [nach Einrichtung bestätigen]. Die weitere E-Mail-Zustellung unterliegt den üblichen Bedingungen des E-Mail-Verkehrs.</p>
+    <p>Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO, soweit Ihre Anfrage auf einen Vertrag mit uns zielt, sonst Art. 6 Abs. 1 lit. f DSGVO (Bearbeitung von Anfragen). Wir löschen die Daten, wenn Ihre Anfrage abschließend bearbeitet ist und keine Aufbewahrungspflichten oder Rechtsansprüche entgegenstehen [konkrete Löschfrist festlegen]. Dasselbe gilt für Anfragen per E-Mail oder Telefon. Unsere Postfächer werden bei ALL-INKL.COM betrieben [bestätigen].</p>
+    <p>Die Angaben mit * sind für die Bearbeitung erforderlich. Ohne sie können wir Ihre Anfrage nicht beantworten.</p>
+    <p>Zum Schutz vor automatisiertem Missbrauch enthält das Formular ein verstecktes Feld und eine Mindestzeit zum Ausfüllen. Es werden dafür keine Dienste Dritter eingesetzt.</p>
 
     <h3>4. Cookies und Analyse</h3>
-    <p>
-      Diese Website setzt selbst keine Cookies und keine Analyse- oder Marketingdienste ein.
-      Schriftarten werden nicht von externen Anbietern geladen.
-    </p>
+    <p>Diese Website setzt selbst keine Cookies und keine Analyse- oder Marketingdienste ein. Schriftarten werden nicht von externen Anbietern geladen.</p>
 
     <h3>5. Interaktive Beispieldemo (externe Bibliothek)</h3>
-    <p>
-      Die Beispieldemo wird erst geladen, wenn Sie „Demo starten“ anklicken. Dabei wird eine
-      3D-Programmbibliothek von jsDelivr (Content-Delivery-Netzwerk) abgerufen. Dabei kann Ihre IP-Adresse
-      an den Betreiber dieses Dienstes übermittelt werden. Rechtsgrundlage: [Rechtsgrundlage und Anbieterangaben
-      nach Prüfung ergänzen, oder die Bibliothek selbst hosten und diesen Abschnitt anpassen].
-    </p>
+    <p>Die Beispieldemo wird erst geladen, wenn Sie „Demo starten“ anklicken. Dabei wird eine 3D-Programmbibliothek von jsDelivr (Content-Delivery-Netzwerk) abgerufen. Dabei kann Ihre IP-Adresse an den Betreiber dieses Dienstes übermittelt werden. [Anbieterangaben, Rechtsgrundlage und mögliche Drittlandübermittlung nach Prüfung ergänzen, oder die Bibliothek selbst hosten und diesen Abschnitt anpassen.]</p>
 
     <h3>6. Empfänger und Drittländer</h3>
-    <p>
-      Empfänger sind unser Hosting- und E-Mail-Anbieter sowie, bei Nutzung der Demo, der oben genannte
-      Bibliotheksanbieter. [Angaben zu möglichen Übermittlungen außerhalb der EU/des EWR nach Prüfung ergänzen.]
-    </p>
+    <p>Empfänger sind unser Hosting- und E-Mail-Anbieter sowie, bei Nutzung der Demo, der oben genannte Bibliotheksanbieter. [Angaben zu möglichen Übermittlungen außerhalb der EU/des EWR nach Prüfung ergänzen.]</p>
 
     <h3>7. Ihre Rechte</h3>
-    <p>
-      Sie haben nach den gesetzlichen Voraussetzungen das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16),
-      Löschung (Art. 17), Einschränkung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21 DSGVO).
-      Erteilte Einwilligungen können Sie mit Wirkung für die Zukunft widerrufen (Art. 7 Abs. 3 DSGVO).
-    </p>
-    <p>
-      Sie können Daten, die auf Grundlage berechtigter Interessen verarbeitet werden, aus Gründen Ihrer besonderen
-      Situation widersprechen. Gegen Direktwerbung können Sie jederzeit widersprechen.
-    </p>
+    <p>Sie haben nach den gesetzlichen Voraussetzungen das Recht auf Auskunft (Art. 15), Berichtigung (Art. 16), Löschung (Art. 17), Einschränkung (Art. 18), Datenübertragbarkeit (Art. 20) und Widerspruch (Art. 21 DSGVO). Erteilte Einwilligungen können Sie mit Wirkung für die Zukunft widerrufen (Art. 7 Abs. 3 DSGVO).</p>
+    <p>Sie können Verarbeitungen, die auf berechtigten Interessen beruhen, aus Gründen Ihrer besonderen Situation widersprechen. Gegen Direktwerbung können Sie jederzeit widersprechen.</p>
 
     <h3>8. Beschwerderecht</h3>
-    <p>
-      Sie können sich bei einer Datenschutzaufsichtsbehörde beschweren, zum Beispiel beim Hessischen Beauftragten
-      für Datenschutz und Informationsfreiheit, Postfach 3163, 65021 Wiesbaden,
-      E-Mail: poststelle@datenschutz.hessen.de [zuständige Behörde bestätigen].
-    </p>
+    <p>Sie können sich bei einer Datenschutzaufsichtsbehörde beschweren, zum Beispiel beim Hessischen Beauftragten für Datenschutz und Informationsfreiheit, Postfach 3163, 65021 Wiesbaden, E-Mail: poststelle@datenschutz.hessen.de [zuständige Behörde bestätigen].</p>
 
     <p class="note">Stand: [Datum der abschließenden Prüfung]</p>
   </dialog>
@@ -789,32 +688,93 @@
 
     // Demo erst nach Klick laden
     document.getElementById("demo-button").addEventListener("click", () => {
-      const box = document.getElementById("demo-box");
       const frame = document.createElement("iframe");
-
       frame.className = "demo-frame";
       frame.src = "demo.html?embed=1";
       frame.title = "Interaktive ReMo-360-Konzeptdemo: Restaurant, Ferienwohnung und Studio";
       frame.allow = "fullscreen";
       frame.setAttribute("allowfullscreen", "");
-
-      box.replaceChildren(frame);
+      document.getElementById("demo-box").replaceChildren(frame);
     });
 
-    // Jahr
     document.getElementById("year").textContent = new Date().getFullYear();
 
-    // Rechtstext-Dialoge
+    // Dialoge
     document.querySelectorAll("[data-dialog]").forEach(btn => {
       btn.addEventListener("click", () => document.getElementById(btn.dataset.dialog).showModal());
     });
-
     document.querySelectorAll("dialog").forEach(dialog => {
       dialog.querySelector(".dialog-close").addEventListener("click", () => dialog.close());
       dialog.addEventListener("click", e => {
         const r = dialog.getBoundingClientRect();
         if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) dialog.close();
       });
+    });
+
+    // Kontaktformular
+    const form = document.getElementById("contact-form");
+    const statusBox = document.getElementById("form-status");
+    const submitBtn = document.getElementById("f-submit");
+    document.getElementById("f-ts").value = String(Date.now());
+
+    function showStatus(type, text) {
+      statusBox.className = "form-status " + type;
+      statusBox.textContent = text;
+    }
+
+    // Rückmeldung bei Versand ohne JavaScript
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("kontakt") === "ok") {
+      showStatus("ok", "Vielen Dank, Ihre Nachricht wurde gesendet. Wir melden uns bei Ihnen.");
+    }
+    if (params.get("kontakt") === "fehler") {
+      showStatus("err", "Ihre Nachricht konnte nicht gesendet werden. Bitte prüfen Sie Ihre Eingaben oder schreiben Sie uns direkt per E-Mail.");
+    }
+
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+
+      const name = form.name.value.trim();
+      const email = form.email.value.trim();
+      const message = form.nachricht.value.trim();
+
+      if (!name || !email || !message) {
+        showStatus("err", "Bitte füllen Sie Name, E-Mail und Nachricht aus.");
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showStatus("err", "Bitte geben Sie eine gültige E-Mail-Adresse an.");
+        return;
+      }
+      if (!form.datenschutz.checked) {
+        showStatus("err", "Bitte bestätigen Sie den Hinweis zur Datenschutzerklärung.");
+        return;
+      }
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Wird gesendet …";
+
+      try {
+        const response = await fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { "X-Requested-With": "fetch", "Accept": "application/json" }
+        });
+        const result = await response.json();
+
+        if (response.ok && result.ok) {
+          showStatus("ok", "Vielen Dank, Ihre Nachricht wurde gesendet. Wir melden uns bei Ihnen.");
+          form.reset();
+          document.getElementById("f-ts").value = String(Date.now());
+        } else {
+          showStatus("err", result.message || "Ihre Nachricht konnte nicht gesendet werden. Bitte versuchen Sie es später erneut.");
+        }
+      } catch (error) {
+        showStatus("err", "Die Verbindung ist fehlgeschlagen. Bitte versuchen Sie es erneut oder schreiben Sie uns direkt per E-Mail.");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Anfrage senden ↗";
+      }
     });
   </script>
 </body>
