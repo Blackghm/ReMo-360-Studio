@@ -5,8 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ReMo 360 | 360°-Rundgänge für Website und Google Maps</title>
   <meta name="description" content="ReMo 360 erstellt virtuelle 360°-Rundgänge für Restaurants, Ferienunterkünfte und Studios – für Ihre Website und Google Maps.">
-  <meta name="theme-color" content="#0b1324">
+ <meta name="theme-color" content="#0b1f3a">
+/* ===== Farbwelt: Marineblau, Weiß, Grau ===== */
 
+:root {
+  --ink: #0b1f3a;
+  --ink-2: #12305a;
+  --ink-3: #071426;
+  --cool: #eef0f3;
+  --line: #d5d9e0;
+  --muted: #5b6472;
+  --muted-dark: #b8c0cc;
+  --accent: #0b1f3a;
+  --accent-hover: #e3e7ee;
+}
+
+:focus-visible { outline-color: #8fa8d0; }
+
+/* Hervorhebungen */
+em { color: #c9d1de; }
+.eyebrow { color: var(--ink-2); }
+.dark .eyebrow { color: #c9d1de; }
+.logo sup { color: #c9d1de; }
+.hero-points span::before { color: #c9d1de; }
+.nav-links > a:not(.nav-cta):hover { color: #c9d1de; }
+.legal-btn:hover { color: #c9d1de; }
+.contact-details dt { color: #c9d1de; }
+
+/* Hinweisleiste und Skip-Link */
+.preview-banner { background: #d5d9e0; color: var(--ink); }
+.skip-link { background: #fff; color: var(--ink); }
+
+/* Kopfbereich */
+.header { background: rgba(11, 31, 58, 0.97); border-bottom-color: #1f3a63; }
+.menu-toggle { border-color: #3a5380; }
+.nav-links { border-bottom-color: #1f3a63; }
+.nav-cta { background: #fff; color: var(--ink); }
+.nav-cta:hover { background: #e3e7ee; }
+
+/* Schaltflächen */
+.button-accent { background: #fff; color: var(--ink); }
+.button-accent:hover { background: #e3e7ee; }
+.form-card .button-accent { background: var(--ink); color: #fff; }
+.form-card .button-accent:hover { background: var(--ink-2); }
+
+/* Demo-Bereich */
+.demo-box { border-color: #2a4875; background: var(--ink-2); }
+.demo-start { background: radial-gradient(ellipse at 50% 40%, #1d4075 0%, #0b1f3a 72%); }
+.demo-start .badge { border-color: #c9d1de; color: #c9d1de; }
+
+/* Karten und Nutzen */
+.card-icon { background: var(--ink); color: #fff; }
+.benefit span { color: var(--ink-2); }
+
+/* Ablauf */
+.step { border-top-color: #8fa0ba; }
+.step > span { color: #c9d1de; }
+
+/* Pakete */
+.package-cat { color: var(--ink-2); }
+.package li::before { color: var(--ink-2); }
+.package-tag { background: #d5d9e0; color: var(--ink); border: 1px solid #b8c0cc; }
+.featured .package-cat { color: #c9d1de; }
+.featured li::before { color: #c9d1de; }
+.featured ul { border-color: #2a4875; }
+
+/* FAQ */
+summary::after { color: var(--ink-2); }
+
+/* Kontakt und Formular */
+.contact-details div { border-top-color: #2a4875; }
+input:focus, select:focus, textarea:focus {
+  border-color: var(--ink-2);
+  box-shadow: 0 0 0 3px rgba(18, 48, 90, 0.25);
+}
+.check input { accent-color: var(--ink); }
+.form-status.ok { background: #e4ebf5; color: var(--ink); border: 1px solid #9db3d3; }
+.form-status.err { background: #eceff3; color: var(--ink); border: 1px solid #8a95ad; border-left: 5px solid var(--ink); }
+.form-status.ok::before { content: "✓ "; font-weight: 700; }
+.form-status.err::before { content: "Hinweis: "; font-weight: 700; }
+
+/* Fußbereich und Rechtstexte */
+.footer-bottom { border-top-color: #1f3a63; }
+.legal-warning { background: #eef0f3; border-left-color: var(--ink-2); }
   <style>
     :root {
       --ink: #0b1324;
